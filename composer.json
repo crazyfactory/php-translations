@@ -1,0 +1,10 @@
+{
+	"name": "crazyfactory/php-translations",
+	"repositories": [
+	],
+	"require": {
+	},
+	"require-dev": {
+		"codeception/codeception": "^2.4"
+	}
+}
