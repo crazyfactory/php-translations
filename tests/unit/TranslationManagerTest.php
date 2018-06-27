@@ -1,5 +1,9 @@
 <?php
+use Codeception\Lib\Di;
+use Codeception\Stub;
+
 require_once("src/translations/TranslationManager.php");
+require_once("src/translations/DBTest.php");
 
 class TranslationManagerTest extends \Codeception\Test\Unit
 {
@@ -120,7 +124,39 @@ class TranslationManagerTest extends \Codeception\Test\Unit
 
 	public function testAdd()
 	{
+		$this->specify('It should return translationId value when record updated successfully.', function()
+		{
+			$mockDb = Stub::makeEmpty(DBTest::class, [
+				'update' => 123456,
+			]);
 
+			$mockTranslation = Stub::construct(
+				TranslationManager::class, [$mockDb], [
+				'addAction' => $translationActionId = Codeception\Stub\Expected::once(),
+			]);
+
+			$result = $mockTranslation->add("Hello", 123456);
+			verify($result)->equals(123456);
+
+			$translationActionId->getMatcher()->verify();
+		});
+
+		$this->specify('It should return 0 value when record updated failed.', function()
+		{
+			$mockDb = Stub::makeEmpty(DBTest::class, [
+				'update' => 0,
+			]);
+
+			$mockTranslation = Stub::construct(
+				TranslationManager::class, [$mockDb], [
+				'addAction' => $translationActionId = Codeception\Stub\Expected::never(),
+			]);
+
+
+			$result = $mockTranslation->add("Hello", 1);
+			verify($result)->equals(0);
+			$translationActionId->getMatcher()->verify();
+		});
 	}
 
 	public function testAddRevision()
@@ -168,7 +204,7 @@ class TranslationManagerTest extends \Codeception\Test\Unit
 		]);
 	}
 
-	public function testGetRevisions()
+	/*public function testGetRevisions()
 	{
 		$this->specify("return translation revision", function($translationId, $locales, $states, $expected)
 		{
@@ -195,5 +231,5 @@ class TranslationManagerTest extends \Codeception\Test\Unit
 			],
 
 		]);
-	}
+	}*/
 }

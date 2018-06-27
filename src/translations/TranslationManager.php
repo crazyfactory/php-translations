@@ -2,6 +2,13 @@
 
 class TranslationManager
 {
+	protected $db;
+
+	public function __construct($db = null)
+	{
+		$this->db = $db?? new DBTest();
+	}
+
 	public static $translation = [
 		[
 			"translation_id" => 1,
@@ -98,7 +105,17 @@ class TranslationManager
 	// add a new translation key, return the insert id, creates entry first, then uses addAction()
 	public function add(string $key, ?int $userId, ?string $scope = null, ?string $state = null): ?int
 	{
+		$result = $this->db->update();
+		if ($result)
+		{
+			$this->addAction(123456, $userId, $scope);
 
+			return $result;
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 	// add a new revision for a given translation/locale combination (adds first, then uses addRevisionAction()
@@ -120,33 +137,6 @@ class TranslationManager
 
 		$dataFromDB = [
 			1 => ['en-GB' =>
-						[
-							'translation_revision_id' => 1,
-							'translation_id'          => 1,
-							'locale'                  => 'en-GB',
-							'value'                   => 'test value of en-GB language',
-							'state'                   => 'active',
-						],
-			],
-			2 => ['fr' =>
-						[
-							'translation_revision_id' => 1,
-							'translation_id'          => 2,
-							'locale'                  => 'fr',
-							'value'                   => 'test value of fr language',
-							'state'                   => 'active',
-						],
-			],
-		];
-
-		return $dataFromDB[$translationId][$locale]?? [];
-	}
-
-	//
-	public function getRevisions(int $translationId, ?array $locales = null, ?array $states = null): array
-	{
-		$dataFromDB = [
-			1 => ['en-GB' =>
 					  [
 						  'translation_revision_id' => 1,
 						  'translation_id'          => 1,
@@ -165,8 +155,32 @@ class TranslationManager
 					  ],
 			],
 		];
-		return $dataFromDB[$translationId][$locales][$states]?? [];
 
+		return $dataFromDB[ $translationId ][ $locale ]?? [];
+	}
+
+	//
+	public function getRevisions(int $translationId, ?array $locales = null, ?array $states = null): array
+	{
+		$dataFromDB = [
+			1 =>
+				[
+					'translation_revision_id' => 1,
+					'translation_id'          => 1,
+					'locale'                  => 'en-GB',
+					'value'                   => 'test value of en-GB language',
+					'state'                   => 'active',
+				],
+			2 => [
+				'translation_revision_id' => 1,
+				'translation_id'          => 2,
+				'locale'                  => 'fr',
+				'value'                   => 'test value of fr language',
+				'state'                   => 'active',
+			],
+		];
+
+		return $dataFromDB[ $translationId ][ $locales ][ $states ]?? [];
 	}
 
 	public function getRevisionById(int $translationRevisionId): array
@@ -200,9 +214,8 @@ class TranslationManager
 		?string $state,
 		?string $scope = null,
 		?string $key = null
-	): int
+	)
 	{
-
 	}
 
 	public function addRevisionAction(
