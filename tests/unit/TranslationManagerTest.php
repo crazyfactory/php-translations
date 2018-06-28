@@ -459,7 +459,7 @@ class TranslationManagerTest extends \Codeception\Test\Unit
 
         }, [
             'examples' => [
-                'return translations where `scopes` = default and `locales` = de' => [
+                'return translations where `scopes` = default and `locales` = de'                => [
                     'scopes'   => ['default'],
                     'locales'  => ['de'],
                     'expected' => [
@@ -475,7 +475,7 @@ class TranslationManagerTest extends \Codeception\Test\Unit
                         ],
                     ],
                 ],
-                'return translations where `scopes` = shop and `locales` = de and en-GB' => [
+                'return translations where `scopes` = shop and `locales` = de and en-GB'         => [
                     'scopes'   => ['shop'],
                     'locales'  => ['de', 'en-GB'],
                     'expected' => [

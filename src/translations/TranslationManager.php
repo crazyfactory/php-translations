@@ -315,7 +315,7 @@ class TranslationManager
             $result[ $scope ] = [];
             foreach ($locales as $locale)
             {
-                $result[$scope][] = $dataFromDB[ $scope ][ $locale ];
+                $result[ $scope ][] = $dataFromDB[ $scope ][ $locale ];
             }
         }
 
