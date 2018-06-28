@@ -459,38 +459,84 @@ class TranslationManagerTest extends \Codeception\Test\Unit
 
         }, [
             'examples' => [
-                'return all data where translation_revision_id =1' => [
+                'return translations where `scopes` = default and `locales` = de' => [
                     'scopes'   => ['default'],
                     'locales'  => ['de'],
                     'expected' => [
-                        [
-                            'id'     => 1,
-                            'key'    => 'de',
-                            'values' => [
-                                "ok"    => "oki",
-                                "hello" => "halo",
+                        'default' => [
+                            [
+                                'id'     => 1,
+                                'key'    => 'de',
+                                'values' => [
+                                    "ok"    => "oki",
+                                    "hello" => "halo",
+                                ],
                             ],
                         ],
                     ],
                 ],
-                'return all data where translation_revision_id =2' => [
+                'return translations where `scopes` = shop and `locales` = de and en-GB' => [
                     'scopes'   => ['shop'],
                     'locales'  => ['de', 'en-GB'],
                     'expected' => [
-                        [
-                            'id'     => 1,
-                            'key'    => 'de',
-                            'values' => [
-                                "test"    => "Prüfung",
-                                "welcome" => "herzlich willkommen",
+                        'shop' => [
+                            [
+                                'id'     => 1,
+                                'key'    => 'de',
+                                'values' => [
+                                    "test"    => "Prüfung",
+                                    "welcome" => "herzlich willkommen",
+                                ],
+                            ],
+                            [
+                                'id'     => 1,
+                                'key'    => 'en-GB',
+                                'values' => [
+                                    "test"    => "test",
+                                    "welcome" => "welcome",
+                                ],
                             ],
                         ],
-                        [
-                            'id'     => 1,
-                            'key'    => 'en-GB',
-                            'values' => [
-                                "test"    => "test",
-                                "welcome" => "welcome",
+                    ],
+                ],
+                'return translations where `scopes` = default,shop and `locales` = de and en-GB' => [
+                    'scopes'   => ['default', 'shop'],
+                    'locales'  => ['de', 'en-GB'],
+                    'expected' => [
+                        'default' => [
+                            [
+                                'id'     => 1,
+                                'key'    => 'de',
+                                'values' => [
+                                    "ok"    => "oki",
+                                    "hello" => "halo",
+                                ],
+                            ],
+                            [
+                                'id'     => 1,
+                                'key'    => 'en-GB',
+                                'values' => [
+                                    "ok"    => "ok",
+                                    "hello" => "hello",
+                                ],
+                            ],
+                        ],
+                        'shop'    => [
+                            [
+                                'id'     => 1,
+                                'key'    => 'de',
+                                'values' => [
+                                    "test"    => "Prüfung",
+                                    "welcome" => "herzlich willkommen",
+                                ],
+                            ],
+                            [
+                                'id'     => 1,
+                                'key'    => 'en-GB',
+                                'values' => [
+                                    "test"    => "test",
+                                    "welcome" => "welcome",
+                                ],
                             ],
                         ],
                     ],
