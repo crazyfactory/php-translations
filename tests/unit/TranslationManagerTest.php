@@ -1,9 +1,8 @@
 <?php
-use Codeception\Lib\Di;
 use Codeception\Stub;
 
-require_once("src/translations/TranslationManager.php");
-require_once("src/translations/DBTest.php");
+require_once("tests/unit/MockData.php");
+require_once("src/translations/MockDB.php");
 
 class TranslationManagerTest extends \Codeception\Test\Unit
 {
@@ -12,7 +11,7 @@ class TranslationManagerTest extends \Codeception\Test\Unit
     {
         $this->specify("It should return translation data by id", function($id, $expected)
         {
-            $translationManager = new TranslationManager();
+            $translationManager = new MockData();
             $result = $translationManager->get($id);
             verify($result)->equals($expected);
         }, [
@@ -69,7 +68,7 @@ class TranslationManagerTest extends \Codeception\Test\Unit
     {
         $this->specify("It should return translation data by key", function($key, $expected)
         {
-            $translationManager = new TranslationManager();
+            $translationManager = new mockData();
             $result = $translationManager->getByKey($key);
             verify($result)->equals($expected);
         }, [
@@ -126,12 +125,12 @@ class TranslationManagerTest extends \Codeception\Test\Unit
     {
         $this->specify('It should return translationId value when record updated successfully.', function()
         {
-            $mockDb = Stub::makeEmpty(DBTest::class, [
+            $mockDb = Stub::makeEmpty(MockDB::class, [
                 'update' => 123456,
             ]);
 
             $mockTranslation = Stub::construct(
-                TranslationManager::class, [$mockDb], [
+                mockData::class, [$mockDb], [
                 'addAction' => $translationActionId = Codeception\Stub\Expected::once(function()
                 {
                     return 1;
@@ -146,12 +145,12 @@ class TranslationManagerTest extends \Codeception\Test\Unit
 
         $this->specify('It should return 0 value when record updated failed.', function()
         {
-            $mockDb = Stub::makeEmpty(DBTest::class, [
+            $mockDb = Stub::makeEmpty(MockDB::class, [
                 'update' => 0,
             ]);
 
             $mockTranslation = Stub::construct(
-                TranslationManager::class, [$mockDb], [
+                MockData::class, [$mockDb], [
                 'addAction' => $translationActionId = Codeception\Stub\Expected::never(function()
                 {
                     return 0;
@@ -168,12 +167,12 @@ class TranslationManagerTest extends \Codeception\Test\Unit
     {
         $this->specify('It should return translationRevisionId value when record updated successfully.', function()
         {
-            $mockDb = Stub::makeEmpty(DBTest::class, [
+            $mockDb = Stub::makeEmpty(MockDB::class, [
                 'update' => 123456,
             ]);
 
             $mockTranslation = Stub::construct(
-                TranslationManager::class, [$mockDb], [
+                MockData::class, [$mockDb], [
                 'addRevisionAction' => $translationRevisionActionId = Codeception\Stub\Expected::once(function()
                 {
                     return 123456;
@@ -188,12 +187,12 @@ class TranslationManagerTest extends \Codeception\Test\Unit
 
         $this->specify('It should return translationRevisionId = 0 value when record updated failed.', function()
         {
-            $mockDb = Stub::makeEmpty(DBTest::class, [
+            $mockDb = Stub::makeEmpty(MockDB::class, [
                 'update' => 0,
             ]);
 
             $mockTranslation = Stub::construct(
-                TranslationManager::class, [$mockDb], [
+                MockData::class, [$mockDb], [
                 'addAction' => $translationActionId = Codeception\Stub\Expected::never(function()
                 {
                     return 0;
@@ -211,7 +210,7 @@ class TranslationManagerTest extends \Codeception\Test\Unit
     {
         $this->specify("return active translation revision", function($translationId, $locale, $expected)
         {
-            $translationManager = new TranslationManager();
+            $translationManager = new mockData();
             $result = $translationManager->getActiveRevision($translationId, $locale);
             verify($result)->equals($expected);
         }, [
@@ -251,7 +250,7 @@ class TranslationManagerTest extends \Codeception\Test\Unit
     {
         $this->specify("return translation revision", function($translationId, $locales, $states, $expected)
         {
-            $translationManager = new TranslationManager();
+            $translationManager = new mockData();
             $results = $translationManager->getRevisions($translationId);
             verify($results)->equals($expected);
 
@@ -313,11 +312,11 @@ class TranslationManagerTest extends \Codeception\Test\Unit
     {
         $this->specify('It should return translationActionId value when record updated successfully.', function()
         {
-            $mockDb = Stub::makeEmpty(DBTest::class, [
+            $mockDb = Stub::makeEmpty(MockDB::class, [
                 'update' => 123456,
             ]);
 
-            $mockTranslation = new TranslationManager($mockDb);
+            $mockTranslation = new MockData($mockDb);
 
             $result = $mockTranslation->addAction(1, 789, 'pending');
             verify($result)->equals(123456);
@@ -325,11 +324,11 @@ class TranslationManagerTest extends \Codeception\Test\Unit
 
         $this->specify('It should return 0 value when record updated failed.', function()
         {
-            $mockDb = Stub::makeEmpty(DBTest::class, [
+            $mockDb = Stub::makeEmpty(MockDB::class, [
                 'update' => 0,
             ]);
 
-            $mockTranslation = new TranslationManager($mockDb);
+            $mockTranslation = new MockData($mockDb);
             $result = $mockTranslation->addAction(1, 789, 'pending');
             verify($result)->equals(0);
         });
@@ -339,11 +338,11 @@ class TranslationManagerTest extends \Codeception\Test\Unit
     {
         $this->specify('It should return translationActionId value when record updated successfully.', function()
         {
-            $mockDb = Stub::makeEmpty(DBTest::class, [
+            $mockDb = Stub::makeEmpty(MockDB::class, [
                 'update' => 123456,
             ]);
 
-            $mockTranslation = new TranslationManager($mockDb);
+            $mockTranslation = new MockData($mockDb);
 
             $result = $mockTranslation->addRevisionAction(1, 789, 'pending', "test-value", "test-comment");
             verify($result)->equals(123456);
@@ -351,11 +350,11 @@ class TranslationManagerTest extends \Codeception\Test\Unit
 
         $this->specify('It should return 0 value when record updated failed.', function()
         {
-            $mockDb = Stub::makeEmpty(DBTest::class, [
+            $mockDb = Stub::makeEmpty(MockDB::class, [
                 'update' => 0,
             ]);
 
-            $mockTranslation = new TranslationManager($mockDb);
+            $mockTranslation = new MockData($mockDb);
             $result = $mockTranslation->addRevisionAction(1, 789, 'pending', "test-value", "test-comment");
             verify($result)->equals(0);
         });
@@ -365,7 +364,7 @@ class TranslationManagerTest extends \Codeception\Test\Unit
     {
         $this->specify("Test", function($translationRevisionId, $expected)
         {
-            $translationManager = new TranslationManager();
+            $translationManager = new mockData();
             $results = $translationManager->getRevisionById($translationRevisionId);
             verify($results)->equals($expected);
 
@@ -407,7 +406,7 @@ class TranslationManagerTest extends \Codeception\Test\Unit
     {
         $this->specify("Test", function($translationRevisionId, $expected)
         {
-            $translationManager = new TranslationManager();
+            $translationManager = new mockData();
             $results = $translationManager->getRevisionActions($translationRevisionId);
             verify($results)->equals($expected);
 
@@ -453,89 +452,31 @@ class TranslationManagerTest extends \Codeception\Test\Unit
     {
         $this->specify("Test", function($scopes, $locales, $expected)
         {
-            $translationManager = new TranslationManager();
+            $translationManager = new mockData();
             $results = $translationManager->findValues($scopes, $locales);
             verify($results)->equals($expected);
 
         }, [
             'examples' => [
-                'return translations where `scopes` = default and `locales` = de'                => [
+                'return translations where `scopes` = default and `locales` = de' => [
                     'scopes'   => ['default'],
-                    'locales'  => ['de'],
+                    'locales'  => ['en-GB', 'de'],
                     'expected' => [
                         'default' => [
                             [
                                 'id'     => 1,
-                                'key'    => 'de',
+                                'key'    => 'ok',
                                 'values' => [
-                                    "ok"    => "oki",
-                                    "hello" => "halo",
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                'return translations where `scopes` = shop and `locales` = de and en-GB'         => [
-                    'scopes'   => ['shop'],
-                    'locales'  => ['de', 'en-GB'],
-                    'expected' => [
-                        'shop' => [
-                            [
-                                'id'     => 1,
-                                'key'    => 'de',
-                                'values' => [
-                                    "test"    => "Prüfung",
-                                    "welcome" => "herzlich willkommen",
+                                    "en-GB" => "ok",
+                                    "de"    => "oki",
                                 ],
                             ],
                             [
-                                'id'     => 1,
-                                'key'    => 'en-GB',
+                                'id'     => 2,
+                                'key'    => 'test',
                                 'values' => [
-                                    "test"    => "test",
-                                    "welcome" => "welcome",
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                'return translations where `scopes` = default,shop and `locales` = de and en-GB' => [
-                    'scopes'   => ['default', 'shop'],
-                    'locales'  => ['de', 'en-GB'],
-                    'expected' => [
-                        'default' => [
-                            [
-                                'id'     => 1,
-                                'key'    => 'de',
-                                'values' => [
-                                    "ok"    => "oki",
-                                    "hello" => "halo",
-                                ],
-                            ],
-                            [
-                                'id'     => 1,
-                                'key'    => 'en-GB',
-                                'values' => [
-                                    "ok"    => "ok",
-                                    "hello" => "hello",
-                                ],
-                            ],
-                        ],
-                        'shop'    => [
-                            [
-                                'id'     => 1,
-                                'key'    => 'de',
-                                'values' => [
-                                    "test"    => "Prüfung",
-                                    "welcome" => "herzlich willkommen",
-                                ],
-                            ],
-                            [
-                                'id'     => 1,
-                                'key'    => 'en-GB',
-                                'values' => [
-                                    "test"    => "test",
-                                    "welcome" => "welcome",
+                                    "en-GB" => "test",
+                                    "de"    => "Prüfung",
                                 ],
                             ],
                         ],
@@ -543,10 +484,5 @@ class TranslationManagerTest extends \Codeception\Test\Unit
                 ],
             ],
         ]);
-    }
-
-    public function testFindRevisions()
-    {
-
     }
 }
