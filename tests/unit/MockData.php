@@ -178,6 +178,7 @@ class mockData extends TranslationManager
 
         return $dataFromDB;
     }
+
     public function getRawRevisionActions(): array
     {
         $dataFromDB = [
@@ -208,7 +209,7 @@ class mockData extends TranslationManager
         return $dataFromDB;
     }
 
-    public function getRawFindValue(): array
+    public function getRawFindValue(?array $scopes, ?array $locales): array
     {
         $dataFromDB = [
             [
@@ -226,11 +227,70 @@ class mockData extends TranslationManager
                 'value'          => 'ok',
             ],
             [
-                'scope'          => 'default',
-                'translation_id' => 1,
-                'key'            => 'ok',
+                'scope'          => 'shop',
+                'translation_id' => 2,
+                'key'            => 'test',
                 'locale'         => 'en-GB',
-                'value'          => 'ok',
+                'value'          => 'test',
+            ],
+            [
+                'scope'          => 'shop',
+                'translation_id' => 2,
+                'key'            => 'test',
+                'locale'         => 'de',
+                'value'          => 'Prüfung',
+            ],
+        ];
+
+        return $dataFromDB;
+    }
+
+    public function getRawFindRevisions(): array
+    {
+        $dataFromDB = [
+            'default' => [
+                'de'    => [
+                    [
+                        'key'   => 'ok',
+                        'value' => 'oki',
+                        'state' => 'pending',
+                    ],
+                    [
+                        'key'   => 'test',
+                        'value' => 'Prüfung',
+                        'state' => 'active',
+                    ],
+                ],
+                'en-GB' => [
+                    [
+                        'key'   => 'ok',
+                        'value' => 'ok',
+                        'state' => 'active',
+                    ],
+                    [
+                        'key'   => 'test',
+                        'value' => 'test',
+                        'state' => 'active',
+                    ],
+                ],
+            ],
+            'shop'    => [
+                'de'    => [
+                    'id'     => 1,
+                    'key'    => 'de',
+                    'values' => [
+                        "test"    => "Prüfung",
+                        "welcome" => "herzlich willkommen",
+                    ],
+                ],
+                'en-GB' => [
+                    'id'     => 1,
+                    'key'    => 'en-GB',
+                    'values' => [
+                        "test"    => "test",
+                        "welcome" => "welcome",
+                    ],
+                ],
             ],
         ];
 

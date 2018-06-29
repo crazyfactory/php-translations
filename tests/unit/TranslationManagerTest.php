@@ -450,17 +450,16 @@ class TranslationManagerTest extends \Codeception\Test\Unit
 
     public function testFindValues()
     {
-        $this->specify("Test", function($scopes, $locales, $expected)
+        $this->specify("It should return data as passed argument.", function($scopes, $locales, $expected)
         {
             $translationManager = new mockData();
             $results = $translationManager->findValues($scopes, $locales);
             verify($results)->equals($expected);
-
         }, [
             'examples' => [
                 'return translations where `scopes` = default and `locales` = de' => [
                     'scopes'   => ['default'],
-                    'locales'  => ['en-GB', 'de'],
+                    'locales'  => ['de', 'en-GB'],
                     'expected' => [
                         'default' => [
                             [
@@ -471,6 +470,8 @@ class TranslationManagerTest extends \Codeception\Test\Unit
                                     "de"    => "oki",
                                 ],
                             ],
+                        ],
+                        'shop'    => [
                             [
                                 'id'     => 2,
                                 'key'    => 'test',
