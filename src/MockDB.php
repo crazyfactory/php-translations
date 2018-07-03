@@ -1,4 +1,5 @@
 <?php
+namespace CrazyFactory\Translations;
 
 class MockDB
 {

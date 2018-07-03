@@ -1,6 +1,7 @@
 <?php
+namespace CrazyFactory\Translations;
 
-abstract class TranslationManager
+abstract class TranslationManager implements ITranslationValuesProvider, ITranslationsRevisionsProvider
 {
     abstract protected function getRawGet();
 
@@ -140,7 +141,7 @@ abstract class TranslationManager
     }
 
     // retrieves a list of all matching revisions for a given combination of scopes, locales, states
-    public function findRevisions(?array $scopes, ?array $locales): array
+    public function findRevisions(?array $scopes, ?array $locales, ?array $states = null): array
     {
 
         $dataFromDB = $this->getRawFindRevisions();

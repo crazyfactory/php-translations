@@ -1,5 +1,5 @@
 <?php
-require_once("src/translations/TranslationManager.php");
+namespace CrazyFactory\Translations;
 
 class mockData extends TranslationManager
 {

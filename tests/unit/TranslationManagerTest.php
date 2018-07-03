@@ -1,8 +1,10 @@
 <?php
-use Codeception\Stub;
 
-require_once("tests/unit/MockData.php");
-require_once("src/translations/MockDB.php");
+namespace CrazyFactory\Translations\Tests\Unit;
+
+use Codeception\Util\Stub;
+use CrazyFactory\Translations\mockData;
+use CrazyFactory\Translations\MockDB;
 
 class TranslationManagerTest extends \Codeception\Test\Unit
 {
@@ -11,7 +13,7 @@ class TranslationManagerTest extends \Codeception\Test\Unit
     {
         $this->specify("It should return translation data by id", function($id, $expected)
         {
-            $translationManager = new MockData();
+            $translationManager = new mockData();
             $result = $translationManager->get($id);
             verify($result)->equals($expected);
         }, [
@@ -131,7 +133,7 @@ class TranslationManagerTest extends \Codeception\Test\Unit
 
             $mockTranslation = Stub::construct(
                 mockData::class, [$mockDb], [
-                'addAction' => $translationActionId = Codeception\Stub\Expected::once(function()
+                'addAction' => $translationActionId = Stub::once(function()
                 {
                     return 1;
                 }),
@@ -151,7 +153,7 @@ class TranslationManagerTest extends \Codeception\Test\Unit
 
             $mockTranslation = Stub::construct(
                 MockData::class, [$mockDb], [
-                'addAction' => $translationActionId = Codeception\Stub\Expected::never(function()
+                'addAction' => $translationActionId = Stub::never(function()
                 {
                     return 0;
                 }),
@@ -173,7 +175,8 @@ class TranslationManagerTest extends \Codeception\Test\Unit
 
             $mockTranslation = Stub::construct(
                 MockData::class, [$mockDb], [
-                'addRevisionAction' => $translationRevisionActionId = Codeception\Stub\Expected::once(function()
+
+                'addRevisionAction' => $translationRevisionActionId = Stub::once(function()
                 {
                     return 123456;
                 }),
@@ -193,7 +196,7 @@ class TranslationManagerTest extends \Codeception\Test\Unit
 
             $mockTranslation = Stub::construct(
                 MockData::class, [$mockDb], [
-                'addAction' => $translationActionId = Codeception\Stub\Expected::never(function()
+                'addAction' => $translationActionId = Stub::never(function()
                 {
                     return 0;
                 }),

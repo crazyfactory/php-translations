@@ -1,12 +1,21 @@
 {
 	"name": "crazyfactory/php-translations",
-	"repositories": [
-	],
+	"autoload": {
+		"psr-4": {
+			"CrazyFactory\\Translations\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"CrazyFactory\\Translations\\Tests\\": "tests/"
+		}
+	},
 	"require": {
 	},
 	"require-dev": {
 		"codeception/codeception": "^2.4",
 		"codeception/specify": "^1.1",
-		"codeception/verify": "^1.0"
+		"codeception/verify": "^1.0",
+		"codeception/stub": "^2.0"
 	}
 }
