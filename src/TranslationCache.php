@@ -33,7 +33,8 @@ class TranslationCache
     public function __construct(
         string $locale,
         ?string $fallbackLocale,
-        string $dir
+        string $dir,
+        ITranslationValuesProvider $valuesProvider
     )
     {
         if (!is_dir($dir))
@@ -51,6 +52,7 @@ class TranslationCache
         $this->locale = $locale;
         $this->fallbackLocale = $fallbackLocale;
         $this->dir = $dir;
+        $this->valuesProvider = $valuesProvider;
     }
 
     /**
@@ -92,7 +94,17 @@ class TranslationCache
      */
     public function loadMerged(array $scopes, array $locales): array
     {
+        $scopes = array_unique($scopes);
+        $result = [];
+        foreach ($locales as $locale)
+        {
+            foreach ($scopes as $scope)
+            {
+                $result = array_merge_recursive($result, $this->loadScope($scope, $locale));
+            }
+        }
 
+        return $result;
     }
 
     /**
@@ -121,7 +133,7 @@ class TranslationCache
      */
     protected function saveCacheFile(array $data, string $filePath): bool
     {
-
+        return file_put_contents($filePath, $this->createCacheFileBody($data));
     }
 
     /**
@@ -130,7 +142,7 @@ class TranslationCache
      */
     protected function createCacheFileBody(array $data): string
     {
-
+        return '<?php return ' . var_export($data, true) . ';';
     }
 
     /**
@@ -140,6 +152,23 @@ class TranslationCache
      */
     protected function loadScope(string $scope, string $locale): array
     {
+        if (!TranslationValidator::isValidLocale($locale))
+        {
+            throw new \InvalidArgumentException('Invalid locale');
+        }
+
+        $hashScope = md5($scope);
+        $filePath = $this->dir . '/'
+            . $locale
+            . '_' . $hashScope . '.php';
+
+        if (!file_exists($filePath))
+        {
+            $values = $this->valuesProvider->findValues([$scope], [$locale]);
+            $this->saveCacheFile($values, $filePath);
+        }
+
+        return include $filePath;
     }
 
 }
