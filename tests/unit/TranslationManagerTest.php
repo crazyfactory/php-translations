@@ -2,11 +2,12 @@
 
 namespace CrazyFactory\Translations\Tests\Unit;
 
+use Codeception\Test\Unit;
 use Codeception\Util\Stub;
 use CrazyFactory\Translations\mockData;
 use CrazyFactory\Translations\MockDB;
 
-class TranslationManagerTest extends \Codeception\Test\Unit
+class TranslationManagerTest extends Unit
 {
     // tests
     public function testGet()
