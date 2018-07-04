@@ -61,7 +61,7 @@ class TranslationCache
      */
     public function load(array $scopes): array
     {
-        /*$this->scopes = $this->filterScopesToLoad($scopes);
+        $this->scopes = $this->filterScopesToLoad($scopes);
 
         if (empty($scopes))
         {
@@ -74,17 +74,35 @@ class TranslationCache
             . ($this->fallbackLocale
                 ? '_' . $this->fallbackLocale
                 : '')
-            . '_' . $hashScopes.'.php';
+            . '_' . $hashScopes . '.php';
 
-        $this->values = includeFile($filePath);
-        if(!file_exists($filePath)){
-            $this->values = include $filePath;
-            return $this->values;
+        if (file_exists($filePath))
+        {
+            codecept_debug($filePath);
+
+            return $this->values = require $filePath;
         }
 
-        codecept_debug($this->values);
+        $locales = $this->fallbackLocale
+            ? [$this->locale, $this->fallbackLocale]
+            : [$this->locale];
 
-        return $this->values = include $filePath;*/
+        $this->values = $this->loadMerged($scopes, $locales);
+        $this->saveCacheFile($this->values, $filePath);
+
+        return $this->values;
+    }
+
+    /**
+     * @param array $scopes
+     * @return array
+     */
+    protected function filterScopesToLoad(array $scopes): array
+    {
+        $scopes = array_unique($scopes);
+        sort($scopes);
+
+        return $scopes;
     }
 
     /**
@@ -105,44 +123,6 @@ class TranslationCache
         }
 
         return $result;
-    }
-
-    /**
-     * @param string $key
-     * @param null|string $default
-     * @return null|string
-     */
-    public function get(string $key, ?string $default = null): ?string
-    {
-        return $this->values[ $key ] ?? $default;
-    }
-
-    /**
-     * @param array $scopes
-     * @return array
-     */
-    protected function filterScopesToLoad(array $scopes): array
-    {
-        return sort(array_unique($scopes));
-    }
-
-    /**
-     * @param array $data
-     * @param string $filePath
-     * @return bool
-     */
-    protected function saveCacheFile(array $data, string $filePath): bool
-    {
-        return file_put_contents($filePath, $this->createCacheFileBody($data));
-    }
-
-    /**
-     * @param array $data
-     * @return string
-     */
-    protected function createCacheFileBody(array $data): string
-    {
-        return '<?php return ' . var_export($data, true) . ';';
     }
 
     /**
@@ -168,7 +148,36 @@ class TranslationCache
             $this->saveCacheFile($values, $filePath);
         }
 
-        return include $filePath;
+        return require $filePath;
+    }
+
+    /**
+     * @param array $data
+     * @param string $filePath
+     * @return bool
+     */
+    protected function saveCacheFile(array $data, string $filePath): bool
+    {
+        return file_put_contents($filePath, $this->createCacheFileBody($data));
+    }
+
+    /**
+     * @param array $data
+     * @return string
+     */
+    protected function createCacheFileBody(array $data): string
+    {
+        return '<?php return ' . var_export($data, true) . ';';
+    }
+
+    /**
+     * @param string $key
+     * @param null|string $default
+     * @return null|string
+     */
+    public function get(string $key, ?string $default = null): ?string
+    {
+        return $this->values[ $key ] ?? $default;
     }
 
 }

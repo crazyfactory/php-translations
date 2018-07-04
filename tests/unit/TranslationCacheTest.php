@@ -33,6 +33,14 @@ class FakeValuesProvider implements ITranslationValuesProvider
                 ],
             ];
         }
+        else if ($scopes == ['default'] && $locales == ['de'])
+        {
+            return [
+                'no' => [
+                    "de" => "nein",
+                ],
+            ];
+        }
 
         return [];
     }
@@ -93,7 +101,7 @@ class TranslationCacheTest extends Unit
 
     public function testLoadMerged()
     {
-        $this->specify("It should removes already loaded scopes, falsy and duplicate scopes from the list ", function($scopes, $locales, $expected)
+        $this->specify("It should return merge value as passed arguments", function($scopes, $locales, $expected)
         {
             $tc = Stub::construct(TranslationCache::class,
                 ['de', 'en-GB', $this->getCacheDir(), new FakeValuesProvider()],
@@ -137,9 +145,49 @@ class TranslationCacheTest extends Unit
                     'locale'   => [],
                     'expected' => [],
                 ],
-                'get empty array'                                        => [
-                    'scopes'   => ['test'],
-                    'locale'   => ['test'],
+            ],
+        ]);
+    }
+
+    public function testLoad()
+    {
+        $this->specify("It should return translation as passed arguments", function($scopes, $expected)
+        {
+            $tc = Stub::construct(TranslationCache::class,
+                ['de', 'en-GB', $this->getCacheDir(), new FakeValuesProvider()],
+                [
+                    'locale' => 'de',
+                    'scopes' => ['default', 'shop'],
+                ]
+            );
+            $results = $tc->load($scopes);
+            verify($results)->equals($expected);
+        }, [
+            'examples' => [
+                'get translation of de and en-GB language at shop scope'    => [
+                    'scopes'   => ['shop'],
+                    'expected' => [
+                        'ok'  => [
+                            "de"    => "oki",
+                            "en-GB" => "ok",
+                        ],
+                        'yes' => [
+                            "de"    => "ya",
+                            "en-GB" => "yes",
+                        ],
+                    ],
+                ],
+                'get translation of de and en-GB language at default scope' => [
+                    'scopes'   => ['default'],
+                    'expected' => [
+                        'no' => [
+                            "de" => "nein",
+                        ],
+                    ],
+                ],
+                'get empty array'                                           => [
+                    'scopes'   => [],
+                    'locale'   => [],
                     'expected' => [],
                 ],
             ],
