@@ -140,7 +140,7 @@ class TranslationManagerTest extends Unit
                 }),
             ]);
 
-            $result = $mockTranslation->add("Hello", 789);
+            $result = $mockTranslation->add("hello", 789);
             verify($result)->equals(123456);
 
             $translationActionId->getMatcher()->verify();
@@ -160,7 +160,7 @@ class TranslationManagerTest extends Unit
                 }),
             ]);
 
-            $result = $mockTranslation->add("Hello", 789);
+            $result = $mockTranslation->add("hello", 789);
             verify($result)->equals(0);
             $translationActionId->getMatcher()->verify();
         });
@@ -183,7 +183,7 @@ class TranslationManagerTest extends Unit
                 }),
             ]);
 
-            $result = $mockTranslation->addRevision(123456, 'default', 789, 'Hello');
+            $result = $mockTranslation->addRevision(123456, 'de', 789, 'hello ka');
             verify($result)->equals(123456);
 
             $translationRevisionActionId->getMatcher()->verify();
@@ -203,7 +203,7 @@ class TranslationManagerTest extends Unit
                 }),
             ]);
 
-            $result = $mockTranslation->addRevision(123456, 'default', 789, 'Hello');
+            $result = $mockTranslation->addRevision(123456, 'de', 789, 'hello');
             verify($result)->equals(0);
             $translationActionId->getMatcher()->verify();
         });
@@ -322,7 +322,7 @@ class TranslationManagerTest extends Unit
 
             $mockTranslation = new MockData($mockDb);
 
-            $result = $mockTranslation->addAction(1, 789, 'pending');
+            $result = $mockTranslation->addAction(1, 789, 'requested');
             verify($result)->equals(123456);
         });
 
@@ -333,7 +333,7 @@ class TranslationManagerTest extends Unit
             ]);
 
             $mockTranslation = new MockData($mockDb);
-            $result = $mockTranslation->addAction(1, 789, 'pending');
+            $result = $mockTranslation->addAction(1, 789, 'requested');
             verify($result)->equals(0);
         });
     }
@@ -348,7 +348,7 @@ class TranslationManagerTest extends Unit
 
             $mockTranslation = new MockData($mockDb);
 
-            $result = $mockTranslation->addRevisionAction(1, 789, 'pending', "test-value", "test-comment");
+            $result = $mockTranslation->addRevisionAction(1, 789, 'pending', "test value", "test comment");
             verify($result)->equals(123456);
         });
 
@@ -359,7 +359,7 @@ class TranslationManagerTest extends Unit
             ]);
 
             $mockTranslation = new MockData($mockDb);
-            $result = $mockTranslation->addRevisionAction(1, 789, 'pending', "test-value", "test-comment");
+            $result = $mockTranslation->addRevisionAction(1, 789, 'pending', "test value", "test comment");
             verify($result)->equals(0);
         });
     }
@@ -465,24 +465,52 @@ class TranslationManagerTest extends Unit
                     'scopes'   => ['default'],
                     'locales'  => ['de', 'en-GB'],
                     'expected' => [
-                        'default' => [
-                            [
-                                'id'     => 1,
-                                'key'    => 'ok',
-                                'values' => [
-                                    "en-GB" => "ok",
-                                    "de"    => "oki",
-                                ],
+                        'ok'   => [
+                            "en-GB" => "ok",
+                            "de"    => "oki",
+                        ],
+                        'test' => [
+                            "en-GB" => "test",
+                            "de"    => "Prüfung",
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testFindRevisions()
+    {
+        $this->specify("Revission", function($scopes, $locales, $states, $expected)
+        {
+            $translationManager = new mockData();
+            $results = $translationManager->findRevisions($scopes, $locales, $states);
+            verify($results)->equals($expected);
+        }, [
+            'examples' => [
+                'return translations where `scopes` = default and `locales` = de' => [
+                    'scopes'   => ['default'],
+                    'locales'  => ['de', 'en-GB'],
+                    'state'    => ['pending', 'activated'],
+                    'expected' => [
+                        'ok'   => [
+                            'values' => [
+                                "de"    => "oki",
+                                "en-GB" => "ok",
+                            ],
+                            'states' => [
+                                "de"    => "pending",
+                                "en-GB" => "activated",
                             ],
                         ],
-                        'shop'    => [
-                            [
-                                'id'     => 2,
-                                'key'    => 'test',
-                                'values' => [
-                                    "en-GB" => "test",
-                                    "de"    => "Prüfung",
-                                ],
+                        'test' => [
+                            'values' => [
+                                "de"    => "Prüfung",
+                                "en-GB" => "test",
+                            ],
+                            'states' => [
+                                "de"    => "activated",
+                                "en-GB" => "activated",
                             ],
                         ],
                     ],
