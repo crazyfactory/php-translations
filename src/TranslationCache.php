@@ -56,7 +56,7 @@ class TranslationCache
     }
 
     /**
-     * preloads translations based on a list of scopes
+     * pre-loads translations based on a list of scopes
      * @param array $scopes
      * @return array
      */
@@ -94,11 +94,16 @@ class TranslationCache
     }
 
     /**
+     * removes already loaded, falsy and duplicate scopes from the list
      * @param array $scopes
      * @return array
      */
     protected function filterScopesToLoad(array $scopes): array
     {
+        if (empty($scopes))
+        {
+            return [];
+        }
         $scopes = array_unique($scopes);
         sort($scopes);
 
@@ -106,6 +111,7 @@ class TranslationCache
     }
 
     /**
+     * gets all current translations for the given scopes, locale and fallbackLocale and caches them as a single php file.
      * @param array $scopes
      * @param array $locales
      * @return array
@@ -116,10 +122,6 @@ class TranslationCache
         $result = [];
         foreach ($locales as $locale)
         {
-            if (!TranslationValidator::isValidLocale($locale))
-            {
-                throw new \InvalidArgumentException('Invalid locale');
-            }
             foreach ($scopes as $scope)
             {
                 $result = array_merge_recursive($result, $this->loadScope($scope, $locale));
@@ -130,6 +132,7 @@ class TranslationCache
     }
 
     /**
+     * retrieves all translations for a given locale/scope combination.
      * @param string $scope
      * @param string $locale
      * @return array
@@ -162,14 +165,14 @@ class TranslationCache
      */
     protected function saveCacheFile(array $data, string $filePath): bool
     {
-        return file_put_contents($filePath, $this->createCacheFileBody($data));
+        return file_put_contents($filePath, $this->serialize($data));
     }
 
     /**
      * @param array $data
      * @return string
      */
-    protected function createCacheFileBody(array $data): string
+    protected function serialize(array $data): string
     {
         return '<?php return ' . var_export($data, true) . ';';
     }
@@ -181,6 +184,6 @@ class TranslationCache
      */
     public function get(string $key, ?string $default = null): ?string
     {
-        return $this->values[ $key ][$this->locale] ?? $default;
+        return $this->values[ $key ][ $this->locale ] ?? $default;
     }
 }

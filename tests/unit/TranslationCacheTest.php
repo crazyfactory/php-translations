@@ -91,7 +91,7 @@ class TranslationCacheTest extends Unit
                     'default'  => null,
                     'expected' => 'please',
                 ],
-                'get empty string' => [
+                'get empty string'                         => [
                     'key'      => 'test',
                     'default'  => null,
                     'expected' => '',
@@ -158,34 +158,31 @@ class TranslationCacheTest extends Unit
                     'locale'   => [],
                     'expected' => [],
                 ],
+                'get empty array'                                        => [
+                    'scopes'   => ['test'],
+                    'locale'   => ['de'],
+                    'expected' => [],
+                ],
             ],
         ]);
 
-        $this->specify('It should throw an exception when locales is not valid.', function ($scopes, $locales) {
-            $tc = Stub::construct(TranslationCache::class,
-                ['de', 'en-GB', $this->getCacheDir(), new FakeValuesProvider()],
-                [
-                    'locale' => 'de',
-                    'scopes' => ['default', 'shop'],
-                ]
-            );
+        $this->specify('It should throw an exception when locales is not valid.', function($scopes, $locales)
+        {
+
+            $tc = new TranslationCache('de', 'en-GB', $this->getCacheDir(), new FakeValuesProvider());
             $tc->loadMerged($scopes, $locales);
         }, [
             'examples' => [
                 'with empty locale' => [
-                    'scopes' => ['default'],
-                    'locale' => [],
-                ],
-                'with empty locale' => [
-                    'scopes' => [],
-                    'locale' => ['de'],
+                    'scopes' => ['test'],
+                    'locale' => ['test'],
                 ],
             ],
-            'throws' => \InvalidArgumentException::class
+            'throws'   => \InvalidArgumentException::class,
         ]);
     }
 
-   public function testLoad()
+    public function testLoad()
     {
         $this->specify("It should return translation as passed arguments", function($scopes, $expected)
         {
