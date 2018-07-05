@@ -1,4 +1,5 @@
 <?php
+
 namespace CrazyFactory\Translations;
 
 class mockData extends TranslationManager
@@ -248,49 +249,37 @@ class mockData extends TranslationManager
     public function getRawFindRevisions(): array
     {
         $dataFromDB = [
-            'default' => [
-                'de'    => [
-                    [
-                        'key'   => 'ok',
-                        'value' => 'oki',
-                        'state' => 'pending',
-                    ],
-                    [
-                        'key'   => 'test',
-                        'value' => 'Prüfung',
-                        'state' => 'active',
-                    ],
-                ],
-                'en-GB' => [
-                    [
-                        'key'   => 'ok',
-                        'value' => 'ok',
-                        'state' => 'active',
-                    ],
-                    [
-                        'key'   => 'test',
-                        'value' => 'test',
-                        'state' => 'active',
-                    ],
-                ],
+            [
+                'scope'          => 'default',
+                'translation_id' => 1,
+                'key'            => 'ok',
+                'locale'         => 'de',
+                'value'          => 'oki',
+                'state'          => 'pending',
             ],
-            'shop'    => [
-                'de'    => [
-                    'id'     => 1,
-                    'key'    => 'de',
-                    'values' => [
-                        "test"    => "Prüfung",
-                        "welcome" => "herzlich willkommen",
-                    ],
-                ],
-                'en-GB' => [
-                    'id'     => 1,
-                    'key'    => 'en-GB',
-                    'values' => [
-                        "test"    => "test",
-                        "welcome" => "welcome",
-                    ],
-                ],
+            [
+                'scope'          => 'default',
+                'translation_id' => 1,
+                'key'            => 'ok',
+                'locale'         => 'en-GB',
+                'value'          => 'ok',
+                'state'          => 'activated',
+            ],
+            [
+                'scope'          => 'shop',
+                'translation_id' => 2,
+                'key'            => 'test',
+                'locale'         => 'en-GB',
+                'value'          => 'test',
+                'state'          => 'activated',
+            ],
+            [
+                'scope'          => 'shop',
+                'translation_id' => 2,
+                'key'            => 'test',
+                'locale'         => 'de',
+                'value'          => 'Prüfung',
+                'state'          => 'activated',
             ],
         ];
 
