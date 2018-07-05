@@ -25,4 +25,18 @@ class TranslationValidator
 
         return in_array($locale, $languages);
     }
+
+    public static function isValidTranslationsState(string $locale): bool
+    {
+        $languages = ['requested', 'reported', 'active', 'archived'];
+
+        return in_array($locale, $languages);
+    }
+
+    public static function isValidTranslationRevisionsState(string $locale): bool
+    {
+        $languages = ['pending', 'rejected', 'approved', 'activated', 'archived'];
+
+        return in_array($locale, $languages);
+    }
 }
