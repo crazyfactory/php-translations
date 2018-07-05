@@ -29,7 +29,7 @@ class FakeValuesProvider implements ITranslationValuesProvider
                     "de" => "oki",
                 ],
                 'yes' => [
-                    "de" => "ya",
+                    "de" => "ja",
                 ],
             ];
         }
@@ -57,9 +57,17 @@ class TranslationCacheTest extends Unit
                 ['de', 'en-GB', $this->getCacheDir(), new FakeValuesProvider()],
                 [
                     'values' => [
-                        'ok'     => 'oki',
-                        'yes'    => 'ya',
-                        'please' => 'please',
+                        'ok'     => [
+                            "de"    => "oki",
+                            "en-GB" => "ok",
+                        ],
+                        'yes'    => [
+                            "de"    => "Ja",
+                            "en-GB" => "yes",
+                        ],
+                        'please' => [
+                            "de" => "please",
+                        ],
                     ],
                 ]
             );
@@ -82,6 +90,11 @@ class TranslationCacheTest extends Unit
                     'key'      => 'please',
                     'default'  => null,
                     'expected' => 'please',
+                ],
+                'get empty string' => [
+                    'key'      => 'test',
+                    'default'  => null,
+                    'expected' => '',
                 ],
             ],
         ]);
@@ -123,7 +136,7 @@ class TranslationCacheTest extends Unit
                             "en-GB" => "ok",
                         ],
                         'yes' => [
-                            "de"    => "ya",
+                            "de"    => "ja",
                             "en-GB" => "yes",
                         ],
                     ],
@@ -136,7 +149,7 @@ class TranslationCacheTest extends Unit
                             "de" => "oki",
                         ],
                         'yes' => [
-                            "de" => "ya",
+                            "de" => "ja",
                         ],
                     ],
                 ],
@@ -147,9 +160,32 @@ class TranslationCacheTest extends Unit
                 ],
             ],
         ]);
+
+        $this->specify('It should throw an exception when locales is not valid.', function ($scopes, $locales) {
+            $tc = Stub::construct(TranslationCache::class,
+                ['de', 'en-GB', $this->getCacheDir(), new FakeValuesProvider()],
+                [
+                    'locale' => 'de',
+                    'scopes' => ['default', 'shop'],
+                ]
+            );
+            $tc->loadMerged($scopes, $locales);
+        }, [
+            'examples' => [
+                'with empty locale' => [
+                    'scopes' => ['default'],
+                    'locale' => [],
+                ],
+                'with empty locale' => [
+                    'scopes' => [],
+                    'locale' => ['de'],
+                ],
+            ],
+            'throws' => \InvalidArgumentException::class
+        ]);
     }
 
-    public function testLoad()
+   public function testLoad()
     {
         $this->specify("It should return translation as passed arguments", function($scopes, $expected)
         {
@@ -172,7 +208,7 @@ class TranslationCacheTest extends Unit
                             "en-GB" => "ok",
                         ],
                         'yes' => [
-                            "de"    => "ya",
+                            "de"    => "ja",
                             "en-GB" => "yes",
                         ],
                     ],

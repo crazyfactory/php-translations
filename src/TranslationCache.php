@@ -56,19 +56,21 @@ class TranslationCache
     }
 
     /**
+     * preloads translations based on a list of scopes
      * @param array $scopes
      * @return array
      */
     public function load(array $scopes): array
     {
-        $this->scopes = $this->filterScopesToLoad($scopes);
+        $scopes = $this->filterScopesToLoad($scopes);
 
         if (empty($scopes))
         {
             return [];
         }
 
-        $hashScopes = md5(implode(',', $scopes));
+        $this->scopes = $scopes;
+        $hashScopes = md5(implode(',', $this->scopes));
         $filePath = $this->dir . '/'
             . $this->locale
             . ($this->fallbackLocale
@@ -78,8 +80,6 @@ class TranslationCache
 
         if (file_exists($filePath))
         {
-            codecept_debug($filePath);
-
             return $this->values = require $filePath;
         }
 
@@ -116,6 +116,10 @@ class TranslationCache
         $result = [];
         foreach ($locales as $locale)
         {
+            if (!TranslationValidator::isValidLocale($locale))
+            {
+                throw new \InvalidArgumentException('Invalid locale');
+            }
             foreach ($scopes as $scope)
             {
                 $result = array_merge_recursive($result, $this->loadScope($scope, $locale));
@@ -177,7 +181,6 @@ class TranslationCache
      */
     public function get(string $key, ?string $default = null): ?string
     {
-        return $this->values[ $key ] ?? $default;
+        return $this->values[ $key ][$this->locale] ?? $default;
     }
-
 }
