@@ -2,9 +2,9 @@
 
 namespace CrazyFactory\Translations\Tests\Unit;
 
-use Codeception\Test\Unit;
 use Codeception\Util\Stub;
 use CrazyFactory\Translations\ITranslationValuesProvider;
+use CrazyFactory\Translations\Tests\Unit;
 use CrazyFactory\Translations\TranslationCache;
 
 class FakeValuesProvider implements ITranslationValuesProvider

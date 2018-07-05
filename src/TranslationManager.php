@@ -63,7 +63,7 @@ abstract class TranslationManager implements ITranslationValuesProvider, ITransl
             throw new \InvalidArgumentException('Invalid Translations State');
         }
 
-        $translationId = $this->db->update($key, $userId, $scope, $state);
+        $translationId = $this->db->insert($key, $userId, $scope, $state);
         if ($translationId)
         {
             $this->addAction($translationId, $userId, $scope, $state);
@@ -103,7 +103,7 @@ abstract class TranslationManager implements ITranslationValuesProvider, ITransl
             throw new \InvalidArgumentException('Invalid Translations State');
         }
 
-        $translationActionId = $this->db->update($translationId, $userId, $state, $scope, $key);
+        $translationActionId = $this->db->insert($translationId, $userId, $state, $scope, $key);
 
         return $translationActionId ?? 0;
     }
@@ -141,7 +141,7 @@ abstract class TranslationManager implements ITranslationValuesProvider, ITransl
             throw new \InvalidArgumentException('Invalid Translation Revisions State');
         }
 
-        $translationRevisionId = $this->db->update($translationId, $locale, $userId, $value, $comment, $state);
+        $translationRevisionId = $this->db->insert($translationId, $locale, $userId, $value, $comment, $state);
         if ($translationRevisionId)
         {
             $this->addRevisionAction($translationRevisionId, $userId, $state, $value, $comment);
@@ -181,7 +181,7 @@ abstract class TranslationManager implements ITranslationValuesProvider, ITransl
             throw new \InvalidArgumentException('Invalid Translation Revisions State');
         }
 
-        $translationRevisionActionId = $this->db->update($translationRevisionId, $userId, $state, $value, $comment);
+        $translationRevisionActionId = $this->db->insert($translationRevisionId, $userId, $state, $value, $comment);
 
         return $translationRevisionActionId ?? 0;
     }

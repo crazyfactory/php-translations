@@ -2,10 +2,10 @@
 
 namespace CrazyFactory\Translations\Tests\Unit;
 
-use Codeception\Test\Unit;
 use Codeception\Util\Stub;
 use CrazyFactory\Translations\mockData;
 use CrazyFactory\Translations\MockDB;
+use CrazyFactory\Translations\Tests\Unit;
 
 class TranslationManagerTest extends Unit
 {
@@ -129,7 +129,7 @@ class TranslationManagerTest extends Unit
         $this->specify('It should return translationId value when record updated successfully.', function()
         {
             $mockDb = Stub::makeEmpty(MockDB::class, [
-                'update' => 123456,
+                'insert' => 123456,
             ]);
 
             $mockTranslation = Stub::construct(
@@ -149,7 +149,7 @@ class TranslationManagerTest extends Unit
         $this->specify('It should return 0 value when record updated failed.', function()
         {
             $mockDb = Stub::makeEmpty(MockDB::class, [
-                'update' => 0,
+                'insert' => 0,
             ]);
 
             $mockTranslation = Stub::construct(
@@ -171,7 +171,7 @@ class TranslationManagerTest extends Unit
         $this->specify('It should return translationRevisionId value when record updated successfully.', function()
         {
             $mockDb = Stub::makeEmpty(MockDB::class, [
-                'update' => 123456,
+                'insert' => 123456,
             ]);
 
             $mockTranslation = Stub::construct(
@@ -192,7 +192,7 @@ class TranslationManagerTest extends Unit
         $this->specify('It should return translationRevisionId = 0 value when record updated failed.', function()
         {
             $mockDb = Stub::makeEmpty(MockDB::class, [
-                'update' => 0,
+                'insert' => 0,
             ]);
 
             $mockTranslation = Stub::construct(
@@ -317,7 +317,7 @@ class TranslationManagerTest extends Unit
         $this->specify('It should return translationActionId value when record updated successfully.', function()
         {
             $mockDb = Stub::makeEmpty(MockDB::class, [
-                'update' => 123456,
+                'insert' => 123456,
             ]);
 
             $mockTranslation = new MockData($mockDb);
@@ -329,7 +329,7 @@ class TranslationManagerTest extends Unit
         $this->specify('It should return 0 value when record updated failed.', function()
         {
             $mockDb = Stub::makeEmpty(MockDB::class, [
-                'update' => 0,
+                'insert' => 0,
             ]);
 
             $mockTranslation = new MockData($mockDb);
@@ -343,7 +343,7 @@ class TranslationManagerTest extends Unit
         $this->specify('It should return translationActionId value when record updated successfully.', function()
         {
             $mockDb = Stub::makeEmpty(MockDB::class, [
-                'update' => 123456,
+                'insert' => 123456,
             ]);
 
             $mockTranslation = new MockData($mockDb);
@@ -355,7 +355,7 @@ class TranslationManagerTest extends Unit
         $this->specify('It should return 0 value when record updated failed.', function()
         {
             $mockDb = Stub::makeEmpty(MockDB::class, [
-                'update' => 0,
+                'insert' => 0,
             ]);
 
             $mockTranslation = new MockData($mockDb);
