@@ -1,32 +1,25 @@
 <?php
+
 namespace CrazyFactory\Translations;
 
 abstract class TranslationManager implements ITranslationValuesProvider, ITranslationsRevisionsProvider
 {
-    abstract protected function getRawGet();
-
-    abstract protected function getRawGetById();
-
-    abstract protected function getRawActiveRevision();
-
-    abstract protected function getRawRevisions();
-
-    abstract protected function getRawRevisionById();
-
-    abstract protected function getRawRevisionActions();
-
-    abstract protected function getRawFindValue(?array $scopes, ?array $locales);
-
-    abstract protected function getRawFindRevisions();
-
     protected $db;
 
+    /**
+     * TranslationManager constructor.
+     * @param null $db
+     */
     public function __construct($db = null)
     {
         $this->db = $db?? new MockDB();
     }
 
-    // get translation by id or key (to look up scope and other columns). does not include value
+    /**
+     * get translation by translation_id
+     * @param int $id
+     * @return array
+     */
     public function get(int $id): array
     {
         $dataFromDB = $this->getRawGet();
@@ -34,6 +27,13 @@ abstract class TranslationManager implements ITranslationValuesProvider, ITransl
         return $dataFromDB[ $id ] ?? [];
     }
 
+    abstract protected function getRawGet();
+
+    /**
+     * get translation by key
+     * @param string $key
+     * @return array
+     */
     public function getByKey(string $key): array
     {
         $dataFromDB = $this->getRawGetById();
@@ -41,13 +41,32 @@ abstract class TranslationManager implements ITranslationValuesProvider, ITransl
         return $dataFromDB[ $key ] ?? [];
     }
 
-    // add a new translation key, return the insert id, creates entry first, then uses addAction()
+    abstract protected function getRawGetById();
+
+    /**
+     * add translation
+     * @param string $key
+     * @param int|null $userId
+     * @param null|string $scope
+     * @param null|string $state
+     * @return int|null
+     */
     public function add(string $key, ?int $userId, ?string $scope = null, ?string $state = null): ?int
     {
-        $translationId = $this->db->update();
+        if (!TranslationValidator::isValidKey($key))
+        {
+            throw new \InvalidArgumentException('Invalid Key');
+        }
+
+        if ($state !== null && !TranslationValidator::isValidTranslationsState($state))
+        {
+            throw new \InvalidArgumentException('Invalid Translations State');
+        }
+
+        $translationId = $this->db->update($key, $userId, $scope, $state);
         if ($translationId)
         {
-            $this->addAction($translationId, $userId, $scope);
+            $this->addAction($translationId, $userId, $scope, $state);
 
             return $translationId;
         }
@@ -57,7 +76,47 @@ abstract class TranslationManager implements ITranslationValuesProvider, ITransl
         }
     }
 
-    // add a new revision for a given translation/locale combination (adds first, then uses addRevisionAction()
+    /**
+     * Saves all changes made to translations
+     * @param int $translationId
+     * @param int|null $userId
+     * @param null|string $state
+     * @param null|string $scope
+     * @param null|string $key
+     * @return int
+     */
+    public function addAction(
+        int $translationId,
+        ?int $userId,
+        ?string $state,
+        ?string $scope = null,
+        ?string $key = null
+    ): int
+    {
+        if ($key !== null && !TranslationValidator::isValidKey($key))
+        {
+            throw new \InvalidArgumentException('Invalid Key');
+        }
+
+        if ($state !== null && !TranslationValidator::isValidTranslationsState($state))
+        {
+            throw new \InvalidArgumentException('Invalid Translations State');
+        }
+
+        $translationActionId = $this->db->update($translationId, $userId, $state, $scope, $key);
+
+        return $translationActionId ?? 0;
+    }
+
+    /**
+     * @param int $translationId
+     * @param string $locale
+     * @param int|null $userId
+     * @param null|string $value
+     * @param null|string $comment
+     * @param null|string $state
+     * @return int
+     */
     public function addRevision(
         int $translationId,
         string $locale,
@@ -67,7 +126,22 @@ abstract class TranslationManager implements ITranslationValuesProvider, ITransl
         ?string $state = null
     ): int
     {
-        $translationRevisionId = $this->db->update();
+        if (!TranslationValidator::isValidLocale($locale))
+        {
+            throw new \InvalidArgumentException('Invalid locale');
+        }
+
+        if ($value !== null && !TranslationValidator::isValidValue($value))
+        {
+            throw new \InvalidArgumentException('Invalid Value');
+        }
+
+        if ($state !== null && !TranslationValidator::isValidTranslationRevisionsState($state))
+        {
+            throw new \InvalidArgumentException('Invalid Translation Revisions State');
+        }
+
+        $translationRevisionId = $this->db->update($translationId, $locale, $userId, $value, $comment, $state);
         if ($translationRevisionId)
         {
             $this->addRevisionAction($translationRevisionId, $userId, $state, $value, $comment);
@@ -80,98 +154,15 @@ abstract class TranslationManager implements ITranslationValuesProvider, ITransl
         }
     }
 
-    // get the currently active revision for a single translation/locale combination
-    public function getActiveRevision(int $translationId, string $locale): array
-    {
-        $dataFromDB = $this->getRawActiveRevision();
-
-        return $dataFromDB[ $translationId ][ $locale ]?? [];
-    }
-
-    public function getRevisions(int $translationId, ?array $locales = null, ?array $states = null): array
-    {
-        $dataFromDB = $this->getRawRevisions();
-
-        return $dataFromDB[ $translationId ]?? [];
-    }
-
-    public function getRevisionById(int $translationRevisionId): array
-    {
-        $dataFromDB = $this->getRawRevisionById();
-
-        return $dataFromDB[ $translationRevisionId ]?? [];
-    }
-
-    // returns a list of all action for this revision
-    public function getRevisionActions(int $translationRevisionId): array
-    {
-        $dataFromDB = $this->getRawRevisionActions();;
-
-        return $dataFromDB[ $translationRevisionId ]?? [];
-    }
-
-    // retrieves a list of all keys/values for the provided scopes and locale combinations.
-    // returns { id:int, key:string, values: {[key: string]: string|null}}[]
-    public function findValues(?array $scopes, ?array $locales): array
-    {
-        $dataFromDB = $this->getRawFindValue($scopes, $locales);
-
-        $result = [];
-        foreach ($dataFromDB as $row)
-        {
-            $data = [];
-            if (empty($result[ $row['scope'] ]))
-            {
-                $result[ $row['scope'] ] = [];
-                $data['id'] = $row['translation_id'];
-                $data['key'] = $row['key'];
-                $data['values'] = [$row['locale'] => $row['value']];
-                $result[ $row['scope'] ][] = $data;
-            }
-            else
-            {
-                if (($index = array_search($row['translation_id'], array_column($result[ $row['scope'] ], 'id'))) > -1)
-                {
-                    $result[ $row['scope'] ][ $index ]['values'][ $row['locale'] ] = $row['value'];
-                }
-            }
-        }
-
-        return $result ?? [];
-    }
-
-    // retrieves a list of all matching revisions for a given combination of scopes, locales, states
-    public function findRevisions(?array $scopes, ?array $locales, ?array $states = null): array
-    {
-
-        $dataFromDB = $this->getRawFindRevisions();
-
-        $result = [];
-        foreach ($scopes as $scope)
-        {
-            foreach ($locales as $locale)
-            {
-                $result[] = $dataFromDB[ $scope ][ $locale ];
-            }
-        }
-
-        return $result;
-    }
-
-    // logging and state updates
-    public function addAction(
-        int $translationId,
-        ?int $userId,
-        ?string $state,
-        ?string $scope = null,
-        ?string $key = null
-    ): int
-    {
-        $translationActionId = $this->db->update();
-
-        return $translationActionId ?? 0;
-    }
-
+    /**
+     * Saves all changes made to translation revision
+     * @param int $translationRevisionId
+     * @param int|null $userId
+     * @param null|string $state
+     * @param null|string $value
+     * @param null|string $comment
+     * @return int
+     */
     public function addRevisionAction(
         int $translationRevisionId,
         ?int $userId,
@@ -180,8 +171,125 @@ abstract class TranslationManager implements ITranslationValuesProvider, ITransl
         ?string $comment
     ): int
     {
-        $translationRevisionActionId = $this->db->update();
+        if ($value !== null && !TranslationValidator::isValidValue($value))
+        {
+            throw new \InvalidArgumentException('Invalid Value');
+        }
+
+        if ($state !== null && !TranslationValidator::isValidTranslationRevisionsState($state))
+        {
+            throw new \InvalidArgumentException('Invalid Translation Revisions State');
+        }
+
+        $translationRevisionActionId = $this->db->update($translationRevisionId, $userId, $state, $value, $comment);
 
         return $translationRevisionActionId ?? 0;
     }
+
+    /**
+     * @param int $translationId
+     * @param string $locale
+     * @return array
+     */
+    public function getActiveRevision(int $translationId, string $locale): array
+    {
+        $dataFromDB = $this->getRawActiveRevision();
+
+        return $dataFromDB[ $translationId ][ $locale ]?? [];
+    }
+
+    abstract protected function getRawActiveRevision();
+
+    /**
+     * @param int $translationId
+     * @param array|null $locales
+     * @param array|null $states
+     * @return array
+     */
+    public function getRevisions(int $translationId, ?array $locales = null, ?array $states = null): array
+    {
+        $dataFromDB = $this->getRawRevisions($translationId, $locales, $states);
+
+        return $dataFromDB[ $translationId ]?? [];
+    }
+
+    abstract protected function getRawRevisions();
+
+    /**
+     * @param int $translationRevisionId
+     * @return array
+     */
+    public function getRevisionById(int $translationRevisionId): array
+    {
+        $dataFromDB = $this->getRawRevisionById($translationRevisionId);
+
+        return $dataFromDB[ $translationRevisionId ]?? [];
+    }
+
+    abstract protected function getRawRevisionById();
+
+    /**
+     * @param int $translationRevisionId
+     * @return array
+     */
+    public function getRevisionActions(int $translationRevisionId): array
+    {
+        $dataFromDB = $this->getRawRevisionActions();;
+
+        return $dataFromDB[ $translationRevisionId ]?? [];
+    }
+
+    abstract protected function getRawRevisionActions();
+
+    /**
+     * retrieves a list of translation which active.
+     * @param array|null $scopes
+     * @param array|null $locales
+     * @return array
+     */
+    public function findValues(?array $scopes, ?array $locales): array
+    {
+        $dataFromDB = $this->getRawFindValue($scopes, $locales);
+
+        $result = [];
+        foreach ($dataFromDB as $row)
+        {
+            if (empty($result[ $row['key'] ]))
+            {
+                $result[ $row['key'] ] = [];
+            }
+            $result[ $row['key'] ][ $row['locale'] ] = $row['value'];
+        }
+
+        return $result ?? [];
+    }
+
+    abstract protected function getRawFindValue(?array $scopes, ?array $locales);
+
+    /**
+     * retrieves a list of translation as passed states argument.
+     * @param array|null $scopes
+     * @param array|null $locales
+     * @param array|null $states
+     * @return array
+     */
+    public function findRevisions(?array $scopes, ?array $locales, ?array $states = null): array
+    {
+        $dataFromDB = $this->getRawFindRevisions();
+
+        $result = [];
+        foreach ($dataFromDB as $row)
+        {
+            if (empty($result[ $row['key'] ]))
+            {
+                $result[ $row['key'] ] = [];
+            }
+            $result[ $row['key'] ]['values'][ $row['locale'] ] = $row['value'];
+            $result[ $row['key'] ]['states'][ $row['locale'] ] = $row['state'];
+        }
+
+        return $result;
+    }
+
+    abstract protected function getRawFindRevisions();
 }
