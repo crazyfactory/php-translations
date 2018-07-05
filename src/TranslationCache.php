@@ -28,7 +28,6 @@ class TranslationCache
      * @param null|string $fallbackLocale
      * @param string $dir
      * @param ITranslationValuesProvider $valuesProvider
-     * @param TranslationValidator|null $validator
      */
     public function __construct(
         string $locale,
