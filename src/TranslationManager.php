@@ -22,12 +22,12 @@ abstract class TranslationManager implements ITranslationValuesProvider, ITransl
      */
     public function get(int $id): array
     {
-        $dataFromDB = $this->getRawGet();
+        $dataFromDB = $this->getRawGet($id);
 
         return $dataFromDB[ $id ] ?? [];
     }
 
-    abstract protected function getRawGet();
+    abstract protected function getRawGet(int $id);
 
     /**
      * get translation by key
@@ -36,12 +36,12 @@ abstract class TranslationManager implements ITranslationValuesProvider, ITransl
      */
     public function getByKey(string $key): array
     {
-        $dataFromDB = $this->getRawGetById();
+        $dataFromDB = $this->getRawGetByKey($key);
 
         return $dataFromDB[ $key ] ?? [];
     }
 
-    abstract protected function getRawGetById();
+    abstract protected function getRawGetByKey(string $key);
 
     /**
      * add translation
@@ -193,12 +193,12 @@ abstract class TranslationManager implements ITranslationValuesProvider, ITransl
      */
     public function getActiveRevision(int $translationId, string $locale): array
     {
-        $dataFromDB = $this->getRawActiveRevision();
+        $dataFromDB = $this->getRawActiveRevision($translationId, $locale);
 
         return $dataFromDB[ $translationId ][ $locale ]?? [];
     }
 
-    abstract protected function getRawActiveRevision();
+    abstract protected function getRawActiveRevision(int $translationId, string $locale);
 
     /**
      * @param int $translationId
@@ -213,7 +213,7 @@ abstract class TranslationManager implements ITranslationValuesProvider, ITransl
         return $dataFromDB[ $translationId ]?? [];
     }
 
-    abstract protected function getRawRevisions();
+    abstract protected function getRawRevisions(int $translationId, ?array $locales = null, ?array $states = null);
 
     /**
      * @param int $translationRevisionId
@@ -226,7 +226,7 @@ abstract class TranslationManager implements ITranslationValuesProvider, ITransl
         return $dataFromDB[ $translationRevisionId ]?? [];
     }
 
-    abstract protected function getRawRevisionById();
+    abstract protected function getRawRevisionById(int $translationRevisionId);
 
     /**
      * @param int $translationRevisionId
@@ -234,12 +234,12 @@ abstract class TranslationManager implements ITranslationValuesProvider, ITransl
      */
     public function getRevisionActions(int $translationRevisionId): array
     {
-        $dataFromDB = $this->getRawRevisionActions();;
+        $dataFromDB = $this->getRawRevisionActions($translationRevisionId);;
 
         return $dataFromDB[ $translationRevisionId ]?? [];
     }
 
-    abstract protected function getRawRevisionActions();
+    abstract protected function getRawRevisionActions(int $translationRevisionId);
 
     /**
      * retrieves a list of translation which active.
@@ -275,7 +275,7 @@ abstract class TranslationManager implements ITranslationValuesProvider, ITransl
      */
     public function findRevisions(?array $scopes, ?array $locales, ?array $states = null): array
     {
-        $dataFromDB = $this->getRawFindRevisions();
+        $dataFromDB = $this->getRawFindRevisions($scopes, $locales, $states);
 
         $result = [];
         foreach ($dataFromDB as $row)
@@ -291,5 +291,5 @@ abstract class TranslationManager implements ITranslationValuesProvider, ITransl
         return $result;
     }
 
-    abstract protected function getRawFindRevisions();
+    abstract protected function getRawFindRevisions(?array $scopes, ?array $locales, ?array $states = null);
 }

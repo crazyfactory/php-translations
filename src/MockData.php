@@ -4,7 +4,11 @@ namespace CrazyFactory\Translations;
 
 class mockData extends TranslationManager
 {
-    public function getRawGet(): array
+    /**
+     * @param int $id
+     * @return array
+     */
+    public function getRawGet(int $id): array
     {
         $dataFromDB = [
             1 => [
@@ -46,7 +50,11 @@ class mockData extends TranslationManager
         return $dataFromDB;
     }
 
-    public function getRawGetById(): array
+    /**
+     * @param string $key
+     * @return array
+     */
+    public function getRawGetByKey(string $key): array
     {
         $dataFromDB = [
             'key 1' => [
@@ -88,7 +96,12 @@ class mockData extends TranslationManager
         return $dataFromDB;
     }
 
-    public function getRawActiveRevision(): array
+    /**
+     * @param int $translationId
+     * @param string $locale
+     * @return array
+     */
+    public function getRawActiveRevision(int $translationId, string $locale): array
     {
         $dataFromDB = [
             1 => ['en-GB' =>
@@ -114,7 +127,13 @@ class mockData extends TranslationManager
         return $dataFromDB;
     }
 
-    public function getRawRevisions(): array
+    /**
+     * @param int $translationId
+     * @param array|null $locales
+     * @param array|null $states
+     * @return array
+     */
+    public function getRawRevisions(int $translationId, ?array $locales = null, ?array $states = null): array
     {
         $dataFromDB = [
             1 => [
@@ -154,7 +173,11 @@ class mockData extends TranslationManager
         return $dataFromDB;
     }
 
-    public function getRawRevisionById(): array
+    /**
+     * @param int $translationRevisionId
+     * @return array
+     */
+    public function getRawRevisionById(int $translationRevisionId): array
     {
         $dataFromDB = [
             1 => [
@@ -180,7 +203,11 @@ class mockData extends TranslationManager
         return $dataFromDB;
     }
 
-    public function getRawRevisionActions(): array
+    /**
+     * @param int $translationRevisionId
+     * @return array
+     */
+    public function getRawRevisionActions(int $translationRevisionId): array
     {
         $dataFromDB = [
             1 => [
@@ -246,7 +273,13 @@ class mockData extends TranslationManager
         return $dataFromDB;
     }
 
-    public function getRawFindRevisions(): array
+    /**
+     * @param array|null $scopes
+     * @param array|null $locales
+     * @param array|null $states
+     * @return array
+     */
+    public function getRawFindRevisions(?array $scopes, ?array $locales, ?array $states = null): array
     {
         $dataFromDB = [
             [
