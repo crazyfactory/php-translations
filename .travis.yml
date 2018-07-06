@@ -11,4 +11,4 @@ install:
   - composer install
 
 script:
-  - codecept run unit
+  - vendor/codeception/codeception/codecept run unit
