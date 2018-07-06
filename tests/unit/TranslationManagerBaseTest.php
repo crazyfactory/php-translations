@@ -3,7 +3,7 @@
 namespace CrazyFactory\Translations\Tests\Unit;
 
 use Codeception\Util\Stub;
-use CrazyFactory\Translations\mockData;
+use CrazyFactory\Translations\MockData;
 use CrazyFactory\Translations\MockDB;
 use CrazyFactory\Translations\Tests\Unit;
 
@@ -14,7 +14,7 @@ class TranslationManagerBaseTest extends Unit
     {
         $this->specify("It should return translation data by id", function($id, $expected)
         {
-            $translationManager = new mockData();
+            $translationManager = new MockData();
             $result = $translationManager->get($id);
             verify($result)->equals($expected);
         }, [
@@ -71,7 +71,7 @@ class TranslationManagerBaseTest extends Unit
     {
         $this->specify("It should return translation data by key", function($key, $expected)
         {
-            $translationManager = new mockData();
+            $translationManager = new MockData();
             $result = $translationManager->getByKey($key);
             verify($result)->equals($expected);
         }, [
@@ -133,7 +133,7 @@ class TranslationManagerBaseTest extends Unit
             ]);
 
             $mockTranslation = Stub::construct(
-                mockData::class, [$mockDb], [
+                MockData::class, [$mockDb], [
                 'addAction' => $translationActionId = Stub::once(function()
                 {
                     return 1;
@@ -214,7 +214,7 @@ class TranslationManagerBaseTest extends Unit
     {
         $this->specify("return active translation revision", function($translationId, $locale, $expected)
         {
-            $translationManager = new mockData();
+            $translationManager = new MockData();
             $result = $translationManager->getActiveRevision($translationId, $locale);
             verify($result)->equals($expected);
         }, [
@@ -254,7 +254,7 @@ class TranslationManagerBaseTest extends Unit
     {
         $this->specify("return translation revision", function($translationId, $locales, $states, $expected)
         {
-            $translationManager = new mockData();
+            $translationManager = new MockData();
             $results = $translationManager->getRevisions($translationId);
             verify($results)->equals($expected);
 
@@ -368,7 +368,7 @@ class TranslationManagerBaseTest extends Unit
     {
         $this->specify("Test", function($translationRevisionId, $expected)
         {
-            $translationManager = new mockData();
+            $translationManager = new MockData();
             $results = $translationManager->getRevisionById($translationRevisionId);
             verify($results)->equals($expected);
 
@@ -410,7 +410,7 @@ class TranslationManagerBaseTest extends Unit
     {
         $this->specify("Test", function($translationRevisionId, $expected)
         {
-            $translationManager = new mockData();
+            $translationManager = new MockData();
             $results = $translationManager->getRevisionActions($translationRevisionId);
             verify($results)->equals($expected);
 
@@ -456,7 +456,7 @@ class TranslationManagerBaseTest extends Unit
     {
         $this->specify("It should return data as passed argument.", function($scopes, $locales, $expected)
         {
-            $translationManager = new mockData();
+            $translationManager = new MockData();
             $results = $translationManager->findValues($scopes, $locales);
             verify($results)->equals($expected);
         }, [
@@ -483,7 +483,7 @@ class TranslationManagerBaseTest extends Unit
     {
         $this->specify("Revission", function($scopes, $locales, $states, $expected)
         {
-            $translationManager = new mockData();
+            $translationManager = new MockData();
             $results = $translationManager->findRevisions($scopes, $locales, $states);
             verify($results)->equals($expected);
         }, [

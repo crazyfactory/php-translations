@@ -2,7 +2,7 @@
 
 namespace CrazyFactory\Translations;
 
-class mockData extends TranslationManagerBase
+class MockData extends TranslationManagerBase
 {
     /**
      * @param int $id
