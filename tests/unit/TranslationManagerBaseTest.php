@@ -7,7 +7,7 @@ use CrazyFactory\Translations\mockData;
 use CrazyFactory\Translations\MockDB;
 use CrazyFactory\Translations\Tests\Unit;
 
-class TranslationManagerTest extends Unit
+class TranslationManagerBaseTest extends Unit
 {
     // tests
     public function testGet()

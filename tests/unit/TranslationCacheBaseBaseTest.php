@@ -5,7 +5,7 @@ namespace CrazyFactory\Translations\Tests\Unit;
 use Codeception\Util\Stub;
 use CrazyFactory\Translations\ITranslationValuesProvider;
 use CrazyFactory\Translations\Tests\Unit;
-use CrazyFactory\Translations\TranslationCache;
+use CrazyFactory\Translations\TranslationCacheBase;
 
 class FakeValuesProvider implements ITranslationValuesProvider
 {
@@ -46,14 +46,14 @@ class FakeValuesProvider implements ITranslationValuesProvider
     }
 }
 
-class TranslationCacheTest extends Unit
+class TranslationCacheBaseTest extends Unit
 {
     //test
     public function testGet()
     {
         $this->specify("It should return value as passed arguments ", function($key, $default, $expected)
         {
-            $tc = Stub::construct(TranslationCache::class,
+            $tc = Stub::construct(TranslationCacheBase::class,
                 ['de', 'en-GB', $this->getCacheDir(), new FakeValuesProvider()],
                 [
                     'values' => [
@@ -116,7 +116,7 @@ class TranslationCacheTest extends Unit
     {
         $this->specify("It should return merge value as passed arguments", function($scopes, $locales, $expected)
         {
-            $tc = Stub::construct(TranslationCache::class,
+            $tc = Stub::construct(TranslationCacheBase::class,
                 ['de', 'en-GB', $this->getCacheDir(), new FakeValuesProvider()],
                 [
                     'locale' => 'de',
@@ -169,7 +169,7 @@ class TranslationCacheTest extends Unit
         $this->specify('It should throw an exception when locales is not valid.', function($scopes, $locales)
         {
 
-            $tc = new TranslationCache('de', 'en-GB', $this->getCacheDir(), new FakeValuesProvider());
+            $tc = new TranslationCacheBase('de', 'en-GB', $this->getCacheDir(), new FakeValuesProvider());
             $tc->loadMerged($scopes, $locales);
         }, [
             'examples' => [
@@ -186,7 +186,7 @@ class TranslationCacheTest extends Unit
     {
         $this->specify("It should return translation as passed arguments", function($scopes, $expected)
         {
-            $tc = Stub::construct(TranslationCache::class,
+            $tc = Stub::construct(TranslationCacheBase::class,
                 ['de', 'en-GB', $this->getCacheDir(), new FakeValuesProvider()],
                 [
                     'locale' => 'de',

@@ -2,7 +2,7 @@
 
 namespace CrazyFactory\Translations;
 
-abstract class TranslationManager implements ITranslationValuesProvider, ITranslationsRevisionsProvider
+abstract class TranslationManagerBase implements ITranslationValuesProvider, ITranslationsRevisionsProvider
 {
     protected $db;
 

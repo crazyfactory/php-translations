@@ -1,5 +1,6 @@
 {
 	"name": "crazyfactory/php-translations",
+	"type": "package",
 	"autoload": {
 		"psr-4": {
 			"CrazyFactory\\Translations\\": "src/"

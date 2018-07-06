@@ -2,7 +2,7 @@
 
 namespace CrazyFactory\Translations;
 
-class TranslationCache
+class TranslationCacheBase
 {
     /** @var string $locale */
     protected $locale;
