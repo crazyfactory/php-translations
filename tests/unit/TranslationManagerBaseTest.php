@@ -2,6 +2,7 @@
 
 namespace CrazyFactory\Translations\Tests\Unit;
 
+use Codeception\Stub\Expected;
 use Codeception\Util\Stub;
 use CrazyFactory\Translations\MockData;
 use CrazyFactory\Translations\MockDB;
@@ -134,7 +135,7 @@ class TranslationManagerBaseTest extends Unit
 
             $mockTranslation = Stub::construct(
                 MockData::class, [$mockDb], [
-                'addAction' => $translationActionId = Stub::once(function()
+                'addAction' => $translationActionId = Expected::once(function()
                 {
                     return 1;
                 }),
@@ -154,7 +155,7 @@ class TranslationManagerBaseTest extends Unit
 
             $mockTranslation = Stub::construct(
                 MockData::class, [$mockDb], [
-                'addAction' => $translationActionId = Stub::never(function()
+                'addAction' => $translationActionId = Expected::never(function()
                 {
                     return 0;
                 }),
@@ -176,8 +177,7 @@ class TranslationManagerBaseTest extends Unit
 
             $mockTranslation = Stub::construct(
                 MockData::class, [$mockDb], [
-
-                'addRevisionAction' => $translationRevisionActionId = Stub::once(function()
+                'addRevisionAction' => $translationRevisionActionId = Expected::once(function()
                 {
                     return 123456;
                 }),
@@ -197,7 +197,7 @@ class TranslationManagerBaseTest extends Unit
 
             $mockTranslation = Stub::construct(
                 MockData::class, [$mockDb], [
-                'addAction' => $translationActionId = Stub::never(function()
+                'addAction' => $translationActionId = Expected::never(function()
                 {
                     return 0;
                 }),
