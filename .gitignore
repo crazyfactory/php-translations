@@ -1,2 +1,4 @@
-# packages
+.idea/
 vendor/
+composer.lock
+_cache/
