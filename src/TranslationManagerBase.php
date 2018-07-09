@@ -10,9 +10,9 @@ abstract class TranslationManagerBase implements ITranslationValuesProvider, ITr
      * TranslationManager constructor.
      * @param null $db
      */
-    public function __construct($db = null)
+    public function __construct($db)
     {
-        $this->db = $db?? new MockDB();
+        $this->db = $db;
     }
 
     /**
@@ -195,7 +195,7 @@ abstract class TranslationManagerBase implements ITranslationValuesProvider, ITr
     {
         $dataFromDB = $this->getRawActiveRevision($translationId, $locale);
 
-        return $dataFromDB[ $translationId ][ $locale ]?? [];
+        return $dataFromDB ?? [];
     }
 
     abstract protected function getRawActiveRevision(int $translationId, string $locale);
@@ -210,7 +210,7 @@ abstract class TranslationManagerBase implements ITranslationValuesProvider, ITr
     {
         $dataFromDB = $this->getRawRevisions($translationId, $locales, $states);
 
-        return $dataFromDB[ $translationId ]?? [];
+        return $dataFromDB ?? [];
     }
 
     abstract protected function getRawRevisions(int $translationId, ?array $locales = null, ?array $states = null);
@@ -223,7 +223,7 @@ abstract class TranslationManagerBase implements ITranslationValuesProvider, ITr
     {
         $dataFromDB = $this->getRawRevisionById($translationRevisionId);
 
-        return $dataFromDB[ $translationRevisionId ]?? [];
+        return $dataFromDB ?? [];
     }
 
     abstract protected function getRawRevisionById(int $translationRevisionId);

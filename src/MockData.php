@@ -5,6 +5,15 @@ namespace CrazyFactory\Translations;
 class MockData extends TranslationManagerBase
 {
     /**
+     * MockData constructor.
+     * @param null $db
+     */
+    public function __construct($db)
+    {
+        parent::__construct($db);
+    }
+
+    /**
      * @param int $id
      * @return array
      */
@@ -14,34 +23,34 @@ class MockData extends TranslationManagerBase
             1 => [
                 [
                     'translation_revision_id' => 1,
-                    'local'                   => 'en-GB',
+                    'locale'                  => 'en-GB',
                     'translation_id'          => 1,
                 ],
                 [
                     'translation_revision_id' => 2,
-                    'local'                   => 'de',
+                    'locale'                  => 'de',
                     'translation_id'          => 1,
                 ],
                 [
                     'translation_revision_id' => 3,
-                    'local'                   => 'fr',
+                    'locale'                  => 'fr',
                     'translation_id'          => 1,
                 ],
             ],
             2 => [
                 [
                     'translation_revision_id' => 4,
-                    'local'                   => 'en-GB',
+                    'locale'                  => 'en-GB',
                     'translation_id'          => 2,
                 ],
                 [
                     'translation_revision_id' => 5,
-                    'local'                   => 'de',
+                    'locale'                  => 'de',
                     'translation_id'          => 2,
                 ],
                 [
                     'translation_revision_id' => 6,
-                    'local'                   => 'fr',
+                    'locale'                  => 'fr',
                     'translation_id'          => 2,
                 ],
             ],
@@ -60,34 +69,34 @@ class MockData extends TranslationManagerBase
             'key 1' => [
                 [
                     'translation_revision_id' => 1,
-                    'local'                   => 'en-GB',
+                    'locale'                  => 'en-GB',
                     'translation_id'          => 1,
                 ],
                 [
                     'translation_revision_id' => 2,
-                    'local'                   => 'de',
+                    'locale'                  => 'de',
                     'translation_id'          => 1,
                 ],
                 [
                     'translation_revision_id' => 3,
-                    'local'                   => 'fr',
+                    'locale'                  => 'fr',
                     'translation_id'          => 1,
                 ],
             ],
             'key 2' => [
                 [
                     'translation_revision_id' => 4,
-                    'local'                   => 'en-GB',
+                    'locale'                  => 'en-GB',
                     'translation_id'          => 2,
                 ],
                 [
                     'translation_revision_id' => 5,
-                    'local'                   => 'de',
+                    'locale'                  => 'de',
                     'translation_id'          => 2,
                 ],
                 [
                     'translation_revision_id' => 6,
-                    'local'                   => 'fr',
+                    'locale'                  => 'fr',
                     'translation_id'          => 2,
                 ],
             ],
@@ -124,7 +133,7 @@ class MockData extends TranslationManagerBase
             ],
         ];
 
-        return $dataFromDB;
+        return $dataFromDB[ $translationId ][ $locale ] ?? [];
     }
 
     /**
@@ -170,7 +179,7 @@ class MockData extends TranslationManagerBase
             ],
         ];
 
-        return $dataFromDB;
+        return $dataFromDB[$translationId] ?? [];
     }
 
     /**
@@ -181,26 +190,22 @@ class MockData extends TranslationManagerBase
     {
         $dataFromDB = [
             1 => [
-                [
-                    'translation_revision_id' => 1,
-                    'translation_id'          => 1,
-                    'locale'                  => 'en-GB',
-                    'value'                   => 'test value of en-GB language',
-                    'state'                   => 'active',
-                ],
+                'translation_revision_id' => 1,
+                'translation_id'          => 1,
+                'locale'                  => 'en-GB',
+                'value'                   => 'test value of en-GB language',
+                'state'                   => 'active',
             ],
             2 => [
-                [
-                    'translation_revision_id' => 1,
-                    'translation_id'          => 1,
-                    'locale'                  => 'fr',
-                    'value'                   => 'test value of fr language',
-                    'state'                   => 'active',
-                ],
+                'translation_revision_id' => 2,
+                'translation_id'          => 1,
+                'locale'                  => 'fr',
+                'value'                   => 'test value of fr language',
+                'state'                   => 'active',
             ],
         ];
 
-        return $dataFromDB;
+        return $dataFromDB[$translationRevisionId] ?? [];
     }
 
     /**
