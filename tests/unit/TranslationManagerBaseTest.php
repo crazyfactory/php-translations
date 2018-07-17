@@ -23,47 +23,19 @@ class TranslationManagerBaseTest extends Unit
                 'Translate with translation_id = 1'                  => [
                     'id'       => 1,
                     'expected' => [
-                        [
-                            'translation_revision_id' => 1,
-                            'locale'                  => 'en-GB',
-                            'translation_id'          => 1,
-                            'scope'                   => 'shop',
-                        ],
-                        [
-                            'translation_revision_id' => 2,
-                            'locale'                  => 'de',
-                            'translation_id'          => 1,
-                            'scope'                   => 'shop',
-                        ],
-                        [
-                            'translation_revision_id' => 3,
-                            'locale'                  => 'fr',
-                            'translation_id'          => 1,
-                            'scope'                   => 'shop',
-                        ],
+                        'translation_id' => 1,
+                        'key'            => 'ok',
+                        'scope'          => 'shop',
+                        'state'          => 'requested',
                     ],
                 ],
                 'Translate with translation_id = 2'                  => [
                     'id'       => 2,
                     'expected' => [
-                        [
-                            'translation_revision_id' => 4,
-                            'locale'                  => 'en-GB',
-                            'translation_id'          => 2,
-                            'scope'                   => 'default',
-                        ],
-                        [
-                            'translation_revision_id' => 5,
-                            'locale'                  => 'de',
-                            'translation_id'          => 2,
-                            'scope'                   => 'default',
-                        ],
-                        [
-                            'translation_revision_id' => 6,
-                            'locale'                  => 'fr',
-                            'translation_id'          => 2,
-                            'scope'                   => 'default',
-                        ],
+                        'translation_id' => 2,
+                        'key'            => 'yes',
+                        'scope'          => 'shop',
+                        'state'          => 'active',
                     ],
                 ],
                 'Translate with translation_id that not exist in DB' => [
@@ -86,41 +58,19 @@ class TranslationManagerBaseTest extends Unit
                 'Translate with `key` = test1'              => [
                     'key'      => 'key 1',
                     'expected' => [
-                        [
-                            'translation_revision_id' => 1,
-                            'locale'                  => 'en-GB',
-                            'translation_id'          => 1,
-                        ],
-                        [
-                            'translation_revision_id' => 2,
-                            'locale'                  => 'de',
-                            'translation_id'          => 1,
-                        ],
-                        [
-                            'translation_revision_id' => 3,
-                            'locale'                  => 'fr',
-                            'translation_id'          => 1,
-                        ],
+                        'translation_id' => 1,
+                        'key'            => 'key 1',
+                        'scope'          => 'shop',
+                        'state'          => 'requested',
                     ],
                 ],
                 'Translate with `key` = test2'              => [
                     'id'       => 'key 2',
                     'expected' => [
-                        [
-                            'translation_revision_id' => 4,
-                            'locale'                  => 'en-GB',
-                            'translation_id'          => 2,
-                        ],
-                        [
-                            'translation_revision_id' => 5,
-                            'locale'                  => 'de',
-                            'translation_id'          => 2,
-                        ],
-                        [
-                            'translation_revision_id' => 6,
-                            'locale'                  => 'fr',
-                            'translation_id'          => 2,
-                        ],
+                        'translation_id' => 2,
+                        'key'            => 'key 2',
+                        'scope'          => 'shop',
+                        'state'          => 'active',
                     ],
                 ],
                 'Translate with `key` that not exist in DB' => [
@@ -229,14 +179,36 @@ class TranslationManagerBaseTest extends Unit
                     'translationId' => 1,
                     'locale'        => 'en-GB',
                     'expected'      => [
-                        'en-GB' => 'test value of en-GB language',
+                        [
+                            'translation_id'          => 1,
+                            'translation_revision_id' => 1,
+                            'local'                   => 'de',
+                            'value'                   => 'Oki',
+                        ],
+                        [
+                            'translation_id'          => 1,
+                            'translation_revision_id' => 2,
+                            'local'                   => 'en-GB',
+                            'value'                   => 'Ok',
+                        ],
                     ],
                 ],
                 'return translation revision data of fr'    => [
                     'translationId' => 2,
                     'locale'        => 'fr',
                     'expected'      => [
-                        'fr' => 'test value of fr language',
+                        [
+                            'translation_id'          => 2,
+                            'translation_revision_id' => 4,
+                            'local'                   => 'de',
+                            'value'                   => 'Ja',
+                        ],
+                        [
+                            'translation_id'          => 2,
+                            'translation_revision_id' => 5,
+                            'local'                   => 'en-GB',
+                            'value'                   => 'Yes',
+                        ],
                     ],
                 ],
                 'return empty array'                        => [
@@ -288,14 +260,14 @@ class TranslationManagerBaseTest extends Unit
                     'expected'      => [
                         2 => [
                             [
-                                'translation_revision_id' => 1,
+                                'translation_revision_id' => 3,
                                 'translation_id'          => 2,
                                 'locale'                  => 'en-GB',
                                 'value'                   => 'test value of en-GB language',
                                 'state'                   => 'active',
                             ],
                             [
-                                'translation_revision_id' => 2,
+                                'translation_revision_id' => 4,
                                 'translation_id'          => 2,
                                 'locale'                  => 'fr',
                                 'value'                   => 'test value of fr language',

@@ -23,7 +23,7 @@ class TranslationCacheBase
     protected $valuesProvider;
 
     /**
-     * TranslationCache constructor.
+     * TranslationCacheBase constructor.
      * @param string $locale
      * @param null|string $fallbackLocale
      * @param string $dir

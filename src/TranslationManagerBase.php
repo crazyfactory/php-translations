@@ -2,7 +2,7 @@
 
 namespace CrazyFactory\Translations;
 
-abstract class TranslationManagerBase implements ITranslationValuesProvider, ITranslationsRevisionsProvider
+abstract class TranslationManagerBase  implements ITranslationValuesProvider, ITranslationsRevisionsProvider
 {
     protected $db;
 
@@ -10,9 +10,11 @@ abstract class TranslationManagerBase implements ITranslationValuesProvider, ITr
      * TranslationManager constructor.
      * @param null $db
      */
-    public function __construct($db)
+    public function __construct($db = null)
     {
-        $this->db = $db;
+        if($db !== null){
+            $this->db = $db;
+        }
     }
 
     /**

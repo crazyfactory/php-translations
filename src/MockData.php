@@ -21,44 +21,16 @@ class MockData extends TranslationManagerBase
     {
         $dataFromDB = [
             1 => [
-                [
-                    'translation_revision_id' => 1,
-                    'locale'                  => 'en-GB',
-                    'translation_id'          => 1,
-                    'scope'                   => 'shop',
-                ],
-                [
-                    'translation_revision_id' => 2,
-                    'locale'                  => 'de',
-                    'translation_id'          => 1,
-                    'scope'                   => 'shop',
-                ],
-                [
-                    'translation_revision_id' => 3,
-                    'locale'                  => 'fr',
-                    'translation_id'          => 1,
-                    'scope'                   => 'shop',
-                ],
+                'translation_id' => 1,
+                'key'            => 'ok',
+                'scope'          => 'shop',
+                'state'          => 'requested',
             ],
             2 => [
-                [
-                    'translation_revision_id' => 4,
-                    'locale'                  => 'en-GB',
-                    'translation_id'          => 2,
-                    'scope'                   => 'default',
-                ],
-                [
-                    'translation_revision_id' => 5,
-                    'locale'                  => 'de',
-                    'translation_id'          => 2,
-                    'scope'                   => 'default',
-                ],
-                [
-                    'translation_revision_id' => 6,
-                    'locale'                  => 'fr',
-                    'translation_id'          => 2,
-                    'scope'                   => 'default',
-                ],
+                'translation_id' => 2,
+                'key'            => 'yes',
+                'scope'          => 'shop',
+                'state'          => 'active',
             ],
         ];
 
@@ -73,38 +45,16 @@ class MockData extends TranslationManagerBase
     {
         $dataFromDB = [
             'key 1' => [
-                [
-                    'translation_revision_id' => 1,
-                    'locale'                  => 'en-GB',
-                    'translation_id'          => 1,
-                ],
-                [
-                    'translation_revision_id' => 2,
-                    'locale'                  => 'de',
-                    'translation_id'          => 1,
-                ],
-                [
-                    'translation_revision_id' => 3,
-                    'locale'                  => 'fr',
-                    'translation_id'          => 1,
-                ],
+                'translation_id' => 1,
+                'key'            => 'key 1',
+                'scope'          => 'shop',
+                'state'          => 'requested',
             ],
             'key 2' => [
-                [
-                    'translation_revision_id' => 4,
-                    'locale'                  => 'en-GB',
-                    'translation_id'          => 2,
-                ],
-                [
-                    'translation_revision_id' => 5,
-                    'locale'                  => 'de',
-                    'translation_id'          => 2,
-                ],
-                [
-                    'translation_revision_id' => 6,
-                    'locale'                  => 'fr',
-                    'translation_id'          => 2,
-                ],
+                'translation_id' => 2,
+                'key'            => 'key 2',
+                'scope'          => 'shop',
+                'state'          => 'active',
             ],
         ];
 
@@ -120,10 +70,32 @@ class MockData extends TranslationManagerBase
     {
         $dataFromDB = [
             1 => [
-                'en-GB' => 'test value of en-GB language',
+                [
+                    'translation_id'          => 1,
+                    'translation_revision_id' => 1,
+                    'local'                   => 'de',
+                    'value'                   => 'Oki',
+                ],
+                [
+                    'translation_id'          => 1,
+                    'translation_revision_id' => 2,
+                    'local'                   => 'en-GB',
+                    'value'                   => 'Ok',
+                ],
             ],
             2 => [
-                'fr' => 'test value of fr language',
+                [
+                    'translation_id'          => 2,
+                    'translation_revision_id' => 4,
+                    'local'                   => 'de',
+                    'value'                   => 'Ja',
+                ],
+                [
+                    'translation_id'          => 2,
+                    'translation_revision_id' => 5,
+                    'local'                   => 'en-GB',
+                    'value'                   => 'Yes',
+                ],
             ],
         ];
 
@@ -158,16 +130,16 @@ class MockData extends TranslationManagerBase
                 ],
             ],
             2 => [
-                1 => [
+                2 => [
                     [
-                        'translation_revision_id' => 1,
+                        'translation_revision_id' => 3,
                         'translation_id'          => 2,
                         'locale'                  => 'en-GB',
                         'value'                   => 'test value of en-GB language',
                         'state'                   => 'active',
                     ],
                     [
-                        'translation_revision_id' => 2,
+                        'translation_revision_id' => 4,
                         'translation_id'          => 2,
                         'locale'                  => 'fr',
                         'value'                   => 'test value of fr language',
@@ -253,29 +225,29 @@ class MockData extends TranslationManagerBase
     {
         $dataFromDB = [
             [
-                'scope'          => 'default',
                 'translation_id' => 1,
+                'scope'          => 'default',
                 'key'            => 'ok',
                 'locale'         => 'de',
                 'value'          => 'oki',
             ],
             [
-                'scope'          => 'default',
                 'translation_id' => 1,
+                'scope'          => 'default',
                 'key'            => 'ok',
                 'locale'         => 'en-GB',
                 'value'          => 'ok',
             ],
             [
-                'scope'          => 'shop',
                 'translation_id' => 2,
+                'scope'          => 'shop',
                 'key'            => 'test',
                 'locale'         => 'en-GB',
                 'value'          => 'test',
             ],
             [
-                'scope'          => 'shop',
                 'translation_id' => 2,
+                'scope'          => 'shop',
                 'key'            => 'test',
                 'locale'         => 'de',
                 'value'          => 'Prüfung',
