@@ -127,7 +127,9 @@ class TranslationCacheBase
             }
         }
 
-        return $result;
+        $this->values = array_merge_recursive($this->values, $result);
+
+        return $this->values;
     }
 
     /**
@@ -151,6 +153,10 @@ class TranslationCacheBase
         if (!file_exists($filePath))
         {
             $values = $this->valuesProvider->findValues([$scope], [$locale]);
+            if (empty($values))
+            {
+                return [];
+            }
             $this->saveCacheFile($values, $filePath);
         }
 
