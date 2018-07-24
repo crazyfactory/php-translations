@@ -5,6 +5,15 @@ namespace CrazyFactory\Translations;
 class MockData extends TranslationManagerBase
 {
     /**
+     * MockData constructor.
+     * @param null $db
+     */
+    public function __construct($db)
+    {
+        parent::__construct($db);
+    }
+
+    /**
      * @param int $id
      * @return array
      */
@@ -12,38 +21,16 @@ class MockData extends TranslationManagerBase
     {
         $dataFromDB = [
             1 => [
-                [
-                    'translation_revision_id' => 1,
-                    'local'                   => 'en-GB',
-                    'translation_id'          => 1,
-                ],
-                [
-                    'translation_revision_id' => 2,
-                    'local'                   => 'de',
-                    'translation_id'          => 1,
-                ],
-                [
-                    'translation_revision_id' => 3,
-                    'local'                   => 'fr',
-                    'translation_id'          => 1,
-                ],
+                'translation_id' => 1,
+                'key'            => 'ok',
+                'scope'          => 'shop',
+                'state'          => 'requested',
             ],
             2 => [
-                [
-                    'translation_revision_id' => 4,
-                    'local'                   => 'en-GB',
-                    'translation_id'          => 2,
-                ],
-                [
-                    'translation_revision_id' => 5,
-                    'local'                   => 'de',
-                    'translation_id'          => 2,
-                ],
-                [
-                    'translation_revision_id' => 6,
-                    'local'                   => 'fr',
-                    'translation_id'          => 2,
-                ],
+                'translation_id' => 2,
+                'key'            => 'yes',
+                'scope'          => 'shop',
+                'state'          => 'active',
             ],
         ];
 
@@ -58,38 +45,16 @@ class MockData extends TranslationManagerBase
     {
         $dataFromDB = [
             'key 1' => [
-                [
-                    'translation_revision_id' => 1,
-                    'local'                   => 'en-GB',
-                    'translation_id'          => 1,
-                ],
-                [
-                    'translation_revision_id' => 2,
-                    'local'                   => 'de',
-                    'translation_id'          => 1,
-                ],
-                [
-                    'translation_revision_id' => 3,
-                    'local'                   => 'fr',
-                    'translation_id'          => 1,
-                ],
+                'translation_id' => 1,
+                'key'            => 'key 1',
+                'scope'          => 'shop',
+                'state'          => 'requested',
             ],
             'key 2' => [
-                [
-                    'translation_revision_id' => 4,
-                    'local'                   => 'en-GB',
-                    'translation_id'          => 2,
-                ],
-                [
-                    'translation_revision_id' => 5,
-                    'local'                   => 'de',
-                    'translation_id'          => 2,
-                ],
-                [
-                    'translation_revision_id' => 6,
-                    'local'                   => 'fr',
-                    'translation_id'          => 2,
-                ],
+                'translation_id' => 2,
+                'key'            => 'key 2',
+                'scope'          => 'shop',
+                'state'          => 'active',
             ],
         ];
 
@@ -104,27 +69,37 @@ class MockData extends TranslationManagerBase
     public function getRawActiveRevision(int $translationId, string $locale): array
     {
         $dataFromDB = [
-            1 => ['en-GB' =>
-                      [
-                          'translation_revision_id' => 1,
-                          'translation_id'          => 1,
-                          'locale'                  => 'en-GB',
-                          'value'                   => 'test value of en-GB language',
-                          'state'                   => 'active',
-                      ],
+            1 => [
+                [
+                    'translation_id'          => 1,
+                    'translation_revision_id' => 1,
+                    'local'                   => 'de',
+                    'value'                   => 'Oki',
+                ],
+                [
+                    'translation_id'          => 1,
+                    'translation_revision_id' => 2,
+                    'local'                   => 'en-GB',
+                    'value'                   => 'Ok',
+                ],
             ],
-            2 => ['fr' =>
-                      [
-                          'translation_revision_id' => 1,
-                          'translation_id'          => 2,
-                          'locale'                  => 'fr',
-                          'value'                   => 'test value of fr language',
-                          'state'                   => 'active',
-                      ],
+            2 => [
+                [
+                    'translation_id'          => 2,
+                    'translation_revision_id' => 4,
+                    'local'                   => 'de',
+                    'value'                   => 'Ja',
+                ],
+                [
+                    'translation_id'          => 2,
+                    'translation_revision_id' => 5,
+                    'local'                   => 'en-GB',
+                    'value'                   => 'Yes',
+                ],
             ],
         ];
 
-        return $dataFromDB;
+        return $dataFromDB[ $translationId ] ?? [];
     }
 
     /**
@@ -137,40 +112,44 @@ class MockData extends TranslationManagerBase
     {
         $dataFromDB = [
             1 => [
-                [
-                    'translation_revision_id' => 1,
-                    'translation_id'          => 1,
-                    'locale'                  => 'en-GB',
-                    'value'                   => 'test value of en-GB language',
-                    'state'                   => 'active',
-                ],
-                [
-                    'translation_revision_id' => 2,
-                    'translation_id'          => 1,
-                    'locale'                  => 'fr',
-                    'value'                   => 'test value of fr language',
-                    'state'                   => 'pending',
+                1 => [
+                    [
+                        'translation_revision_id' => 1,
+                        'translation_id'          => 1,
+                        'locale'                  => 'en-GB',
+                        'value'                   => 'test value of en-GB language',
+                        'state'                   => 'active',
+                    ],
+                    [
+                        'translation_revision_id' => 2,
+                        'translation_id'          => 1,
+                        'locale'                  => 'fr',
+                        'value'                   => 'test value of fr language',
+                        'state'                   => 'pending',
+                    ],
                 ],
             ],
             2 => [
-                [
-                    'translation_revision_id' => 1,
-                    'translation_id'          => 2,
-                    'locale'                  => 'en-GB',
-                    'value'                   => 'test value of en-GB language',
-                    'state'                   => 'active',
-                ],
-                [
-                    'translation_revision_id' => 2,
-                    'translation_id'          => 2,
-                    'locale'                  => 'fr',
-                    'value'                   => 'test value of fr language',
-                    'state'                   => 'pending',
+                2 => [
+                    [
+                        'translation_revision_id' => 3,
+                        'translation_id'          => 2,
+                        'locale'                  => 'en-GB',
+                        'value'                   => 'test value of en-GB language',
+                        'state'                   => 'active',
+                    ],
+                    [
+                        'translation_revision_id' => 4,
+                        'translation_id'          => 2,
+                        'locale'                  => 'fr',
+                        'value'                   => 'test value of fr language',
+                        'state'                   => 'pending',
+                    ],
                 ],
             ],
         ];
 
-        return $dataFromDB;
+        return $dataFromDB[ $translationId ] ?? [];
     }
 
     /**
@@ -181,26 +160,22 @@ class MockData extends TranslationManagerBase
     {
         $dataFromDB = [
             1 => [
-                [
-                    'translation_revision_id' => 1,
-                    'translation_id'          => 1,
-                    'locale'                  => 'en-GB',
-                    'value'                   => 'test value of en-GB language',
-                    'state'                   => 'active',
-                ],
+                'translation_revision_id' => 1,
+                'translation_id'          => 1,
+                'locale'                  => 'en-GB',
+                'value'                   => 'test value of en-GB language',
+                'state'                   => 'active',
             ],
             2 => [
-                [
-                    'translation_revision_id' => 1,
-                    'translation_id'          => 1,
-                    'locale'                  => 'fr',
-                    'value'                   => 'test value of fr language',
-                    'state'                   => 'active',
-                ],
+                'translation_revision_id' => 2,
+                'translation_id'          => 1,
+                'locale'                  => 'fr',
+                'value'                   => 'test value of fr language',
+                'state'                   => 'active',
             ],
         ];
 
-        return $dataFromDB;
+        return $dataFromDB[ $translationRevisionId ] ?? [];
     }
 
     /**
@@ -218,7 +193,16 @@ class MockData extends TranslationManagerBase
                     'create_at'                      => '0000-00-00',
                     'comment'                        => 'test comment',
                     'value'                          => 'test value',
-                    'state'                          => 'active',
+                    'state'                          => 'activated',
+                ],
+                [
+                    'translation_revision_action_id' => 1,
+                    'translation_revision_id'        => 1,
+                    'user_id'                        => 1,
+                    'create_at'                      => '0000-00-00',
+                    'comment'                        => 'test comment2',
+                    'value'                          => 'test value2',
+                    'state'                          => 'pending',
                 ],
             ],
             2 => [
@@ -241,29 +225,29 @@ class MockData extends TranslationManagerBase
     {
         $dataFromDB = [
             [
-                'scope'          => 'default',
                 'translation_id' => 1,
+                'scope'          => 'default',
                 'key'            => 'ok',
                 'locale'         => 'de',
                 'value'          => 'oki',
             ],
             [
-                'scope'          => 'default',
                 'translation_id' => 1,
+                'scope'          => 'default',
                 'key'            => 'ok',
                 'locale'         => 'en-GB',
                 'value'          => 'ok',
             ],
             [
-                'scope'          => 'shop',
                 'translation_id' => 2,
+                'scope'          => 'shop',
                 'key'            => 'test',
                 'locale'         => 'en-GB',
                 'value'          => 'test',
             ],
             [
-                'scope'          => 'shop',
                 'translation_id' => 2,
+                'scope'          => 'shop',
                 'key'            => 'test',
                 'locale'         => 'de',
                 'value'          => 'Prüfung',

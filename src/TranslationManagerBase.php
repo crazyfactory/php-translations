@@ -2,7 +2,7 @@
 
 namespace CrazyFactory\Translations;
 
-abstract class TranslationManagerBase implements ITranslationValuesProvider, ITranslationsRevisionsProvider
+abstract class TranslationManagerBase  implements ITranslationValuesProvider, ITranslationsRevisionsProvider
 {
     protected $db;
 
@@ -12,7 +12,9 @@ abstract class TranslationManagerBase implements ITranslationValuesProvider, ITr
      */
     public function __construct($db = null)
     {
-        $this->db = $db?? new MockDB();
+        if($db !== null){
+            $this->db = $db;
+        }
     }
 
     /**
@@ -195,7 +197,7 @@ abstract class TranslationManagerBase implements ITranslationValuesProvider, ITr
     {
         $dataFromDB = $this->getRawActiveRevision($translationId, $locale);
 
-        return $dataFromDB[ $translationId ][ $locale ]?? [];
+        return $dataFromDB ?? [];
     }
 
     abstract protected function getRawActiveRevision(int $translationId, string $locale);
@@ -210,7 +212,7 @@ abstract class TranslationManagerBase implements ITranslationValuesProvider, ITr
     {
         $dataFromDB = $this->getRawRevisions($translationId, $locales, $states);
 
-        return $dataFromDB[ $translationId ]?? [];
+        return $dataFromDB ?? [];
     }
 
     abstract protected function getRawRevisions(int $translationId, ?array $locales = null, ?array $states = null);
@@ -223,7 +225,7 @@ abstract class TranslationManagerBase implements ITranslationValuesProvider, ITr
     {
         $dataFromDB = $this->getRawRevisionById($translationRevisionId);
 
-        return $dataFromDB[ $translationRevisionId ]?? [];
+        return $dataFromDB ?? [];
     }
 
     abstract protected function getRawRevisionById(int $translationRevisionId);
